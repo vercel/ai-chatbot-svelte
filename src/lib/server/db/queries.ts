@@ -1,11 +1,9 @@
-import 'server-only';
-
 import { genSaltSync, hashSync } from 'bcrypt-ts';
 import { and, asc, desc, eq, gt, gte, inArray } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { POSTGRES_URL } from '$env/static/private';
-
+import { ResultAsync, err, fromPromise, ok, safeTry } from 'neverthrow';
 import {
 	user,
 	chat,
@@ -15,8 +13,14 @@ import {
 	suggestion,
 	type Message,
 	message,
-	vote
+	vote,
+	type Session,
+	session
 } from './schema';
+import type { DbError } from '$lib/errors/db';
+import { DbInternalError } from '$lib/errors/db/internal-error';
+import { DbEntityNotFoundError } from '$lib/errors/db/entity-not-found';
+import ms from 'ms';
 
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
@@ -26,25 +30,96 @@ import {
 const client = postgres(POSTGRES_URL);
 const db = drizzle(client);
 
-export async function getUser(email: string): Promise<Array<User>> {
-	try {
-		return await db.select().from(user).where(eq(user.email, email));
-	} catch (error) {
-		console.error('Failed to get user from database');
-		throw error;
-	}
+export function getUser(email: string): ResultAsync<User, DbError> {
+	return safeTry(async function* () {
+		const userResult = yield* fromPromise(
+			db.select().from(user).where(eq(user.email, email)),
+			(e) => new DbInternalError({ cause: e })
+		);
+		const maybeUser = userResult.at(0);
+		if (!maybeUser) {
+			return err(new DbEntityNotFoundError(email, 'User'));
+		}
+		return ok(maybeUser);
+	});
 }
 
-export async function createUser(email: string, password: string) {
-	const salt = genSaltSync(10);
-	const hash = hashSync(password, salt);
+export function createUser(email: string, password: string): ResultAsync<void, DbError> {
+	return safeTry(async function* () {
+		const salt = genSaltSync(10);
+		const hash = hashSync(password, salt);
 
-	try {
-		return await db.insert(user).values({ email, password: hash });
-	} catch (error) {
-		console.error('Failed to create user in database');
-		throw error;
-	}
+		yield* fromPromise(
+			db.insert(user).values({ email, password: hash }),
+			(e) => new DbInternalError({ cause: e })
+		);
+
+		return ok(undefined);
+	});
+}
+
+export function createSession(value: Session): ResultAsync<void, DbError> {
+	return safeTry(async function* () {
+		yield* fromPromise(db.insert(session).values(value), (e) => new DbInternalError({ cause: e }));
+
+		return ok(undefined);
+	});
+}
+
+export function getFullSession(
+	sessionId: string
+): ResultAsync<{ session: Session; user: User }, DbError> {
+	return safeTry(async function* () {
+		const sessionResult = yield* fromPromise(
+			db
+				.select({ user, session })
+				.from(session)
+				.innerJoin(user, eq(session.userId, user.id))
+				.where(eq(session.id, sessionId)),
+			(e) => new DbInternalError({ cause: e })
+		);
+		const maybeSession = sessionResult.at(0);
+		if (!maybeSession) {
+			return err(new DbEntityNotFoundError(sessionId, 'Session'));
+		}
+		return ok(maybeSession);
+	});
+}
+
+export function deleteSession(sessionId: string): ResultAsync<void, DbError> {
+	return safeTry(async function* () {
+		yield* fromPromise(
+			db.delete(session).where(eq(session.id, sessionId)),
+			(e) => new DbInternalError({ cause: e })
+		);
+
+		return ok(undefined);
+	});
+}
+
+export function extendSession(sessionId: string): ResultAsync<void, DbError> {
+	return safeTry(async function* () {
+		yield* fromPromise(
+			db
+				.update(session)
+				.set({ expiresAt: new Date(Date.now() + ms('30d')) })
+				.where(eq(session.id, sessionId)),
+			(e) => new DbInternalError({ cause: e })
+		);
+
+		return ok(undefined);
+	});
+}
+
+export function deleteSessionsForUser(userId: string): ResultAsync<void, DbError> {
+	return safeTry(async function* () {
+		yield* fromPromise(
+			db.delete(session).where(eq(session.userId, userId)),
+			(e) => new DbInternalError({ cause: e })
+		);
+
+		return ok(undefined);
+	});
 }
 
 export async function saveChat({

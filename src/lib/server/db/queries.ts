@@ -3,7 +3,7 @@ import { and, asc, desc, eq, gt, gte, inArray } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { POSTGRES_URL } from '$env/static/private';
-import { ResultAsync, err, fromPromise, ok, safeTry } from 'neverthrow';
+import { ResultAsync, fromPromise, ok, safeTry } from 'neverthrow';
 import {
 	user,
 	chat,
@@ -15,12 +15,13 @@ import {
 	message,
 	vote,
 	type Session,
-	session
+	session,
+	type AuthUser
 } from './schema';
 import type { DbError } from '$lib/errors/db';
 import { DbInternalError } from '$lib/errors/db/internal-error';
-import { DbEntityNotFoundError } from '$lib/errors/db/entity-not-found';
 import ms from 'ms';
+import { unwrapSingleQueryResult } from './utils';
 
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
@@ -30,39 +31,52 @@ import ms from 'ms';
 const client = postgres(POSTGRES_URL);
 const db = drizzle(client);
 
+export function getAuthUser(email: string): ResultAsync<AuthUser, DbError> {
+	return safeTry(async function* () {
+		const userResult = yield* fromPromise(
+			db.select().from(user).where(eq(user.email, email)),
+			(e) => new DbInternalError({ cause: e })
+		);
+		return unwrapSingleQueryResult(userResult, email, 'User');
+	});
+}
+
 export function getUser(email: string): ResultAsync<User, DbError> {
 	return safeTry(async function* () {
 		const userResult = yield* fromPromise(
 			db.select().from(user).where(eq(user.email, email)),
 			(e) => new DbInternalError({ cause: e })
 		);
-		const maybeUser = userResult.at(0);
-		if (!maybeUser) {
-			return err(new DbEntityNotFoundError(email, 'User'));
-		}
-		return ok(maybeUser);
+		const { password: _, ...rest } = yield* unwrapSingleQueryResult(userResult, email, 'User');
+
+		return ok(rest);
 	});
 }
 
-export function createUser(email: string, password: string): ResultAsync<void, DbError> {
+export function createAuthUser(email: string, password: string): ResultAsync<AuthUser, DbError> {
 	return safeTry(async function* () {
 		const salt = genSaltSync(10);
 		const hash = hashSync(password, salt);
 
-		yield* fromPromise(
-			db.insert(user).values({ email, password: hash }),
-			(e) => new DbInternalError({ cause: e })
+		const userResult = yield* fromPromise(
+			db.insert(user).values({ email, password: hash }).returning(),
+			(e) => {
+				console.error(e);
+				return new DbInternalError({ cause: e });
+			}
 		);
 
-		return ok(undefined);
+		return unwrapSingleQueryResult(userResult, email, 'User');
 	});
 }
 
-export function createSession(value: Session): ResultAsync<void, DbError> {
+export function createSession(value: Session): ResultAsync<Session, DbError> {
 	return safeTry(async function* () {
-		yield* fromPromise(db.insert(session).values(value), (e) => new DbInternalError({ cause: e }));
-
-		return ok(undefined);
+		const sessionResult = yield* fromPromise(
+			db.insert(session).values(value).returning(),
+			(e) => new DbInternalError({ cause: e })
+		);
+		return unwrapSingleQueryResult(sessionResult, value.id, 'Session');
 	});
 }
 
@@ -78,15 +92,11 @@ export function getFullSession(
 				.where(eq(session.id, sessionId)),
 			(e) => new DbInternalError({ cause: e })
 		);
-		const maybeSession = sessionResult.at(0);
-		if (!maybeSession) {
-			return err(new DbEntityNotFoundError(sessionId, 'Session'));
-		}
-		return ok(maybeSession);
+		return unwrapSingleQueryResult(sessionResult, sessionId, 'Session');
 	});
 }
 
-export function deleteSession(sessionId: string): ResultAsync<void, DbError> {
+export function deleteSession(sessionId: string): ResultAsync<undefined, DbError> {
 	return safeTry(async function* () {
 		yield* fromPromise(
 			db.delete(session).where(eq(session.id, sessionId)),
@@ -97,21 +107,22 @@ export function deleteSession(sessionId: string): ResultAsync<void, DbError> {
 	});
 }
 
-export function extendSession(sessionId: string): ResultAsync<void, DbError> {
+export function extendSession(sessionId: string): ResultAsync<Session, DbError> {
 	return safeTry(async function* () {
-		yield* fromPromise(
+		const sessionResult = yield* fromPromise(
 			db
 				.update(session)
 				.set({ expiresAt: new Date(Date.now() + ms('30d')) })
-				.where(eq(session.id, sessionId)),
+				.where(eq(session.id, sessionId))
+				.returning(),
 			(e) => new DbInternalError({ cause: e })
 		);
 
-		return ok(undefined);
+		return unwrapSingleQueryResult(sessionResult, sessionId, 'Session');
 	});
 }
 
-export function deleteSessionsForUser(userId: string): ResultAsync<void, DbError> {
+export function deleteSessionsForUser(userId: string): ResultAsync<undefined, DbError> {
 	return safeTry(async function* () {
 		yield* fromPromise(
 			db.delete(session).where(eq(session.userId, userId)),

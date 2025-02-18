@@ -17,7 +17,8 @@ export const user = pgTable('User', {
 	password: varchar('password', { length: 64 }).notNull()
 });
 
-export type User = InferSelectModel<typeof user>;
+export type AuthUser = InferSelectModel<typeof user>;
+export type User = Omit<AuthUser, 'password'>;
 
 export const session = pgTable('Session', {
 	id: text('id').primaryKey().notNull(),

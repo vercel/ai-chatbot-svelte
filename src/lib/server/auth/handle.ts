@@ -18,11 +18,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	} else {
 		const { session, user } = validatedTokenResult.value;
 		if (session) {
-			setSessionTokenCookie(event, token, session.expiresAt);
+			setSessionTokenCookie(event.cookies, token, session.expiresAt);
 			event.locals.session = session;
 			event.locals.user = user;
 		} else {
-			deleteSessionTokenCookie(event);
+			deleteSessionTokenCookie(event.cookies);
 		}
 	}
 

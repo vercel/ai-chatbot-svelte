@@ -6,11 +6,10 @@ config({
 });
 
 export default defineConfig({
-	schema: './lib/db/schema.ts',
-	out: './lib/db/migrations',
+	schema: './src/lib/server/db/schema.ts',
+	out: './src/lib/server/db/migrations',
 	dialect: 'postgresql',
 	dbCredentials: {
-		// @ts-expect-error -- This is a required environment variable
 		url: process.env.POSTGRES_URL!
 	}
 });

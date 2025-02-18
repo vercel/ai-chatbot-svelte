@@ -11,7 +11,7 @@ import {
 import { ok, ResultAsync, safeTry } from 'neverthrow';
 import type { DbError } from '$lib/errors/db';
 import ms from 'ms';
-import type { RequestEvent } from '@sveltejs/kit';
+import type { Cookies, RequestEvent } from '@sveltejs/kit';
 
 export function generateSessionToken(): string {
 	const bytes = new Uint8Array(32);
@@ -48,11 +48,11 @@ export function validateSessionToken(token: string): ResultAsync<SessionValidati
 	});
 }
 
-export function invalidateSession(sessionId: string): ResultAsync<void, DbError> {
+export function invalidateSession(sessionId: string): ResultAsync<undefined, DbError> {
 	return deleteSession(sessionId);
 }
 
-export function invalidateAllSessions(userId: string): ResultAsync<void, DbError> {
+export function invalidateAllSessions(userId: string): ResultAsync<undefined, DbError> {
 	return deleteSessionsForUser(userId);
 }
 
@@ -60,8 +60,8 @@ export function getSessionCookie(event: RequestEvent): string | undefined {
 	return event.cookies.get('session');
 }
 
-export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date): void {
-	event.cookies.set('session', token, {
+export function setSessionTokenCookie(cookies: Cookies, token: string, expiresAt: Date): void {
+	cookies.set('session', token, {
 		httpOnly: true,
 		sameSite: 'lax',
 		expires: expiresAt,
@@ -69,8 +69,8 @@ export function setSessionTokenCookie(event: RequestEvent, token: string, expire
 	});
 }
 
-export function deleteSessionTokenCookie(event: RequestEvent): void {
-	event.cookies.set('session', 'token', {
+export function deleteSessionTokenCookie(cookies: Cookies): void {
+	cookies.set('session', 'token', {
 		httpOnly: true,
 		sameSite: 'lax',
 		maxAge: 0,

@@ -1,5 +1,12 @@
 <script lang="ts">
-	let { size = 16 }: { size?: number } = $props();
+	import type { WithElementRef } from '$lib/utils/types.js';
+	import type { SVGAttributes } from 'svelte/elements';
+
+	let {
+		size = 16,
+		ref = $bindable(null),
+		...rest
+	}: WithElementRef<SVGAttributes<SVGElement> & { size?: number }, SVGElement> = $props();
 </script>
 
 <svg
@@ -8,6 +15,8 @@
 	viewBox="0 0 16 16"
 	width={size}
 	style="color: currentColor;"
+	bind:this={ref}
+	{...rest}
 >
 	<g clip-path="url(#clip0_2393_1490)">
 		<path d="M8 0V4" stroke="currentColor" stroke-width="1.5" />

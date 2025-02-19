@@ -1,7 +1,6 @@
-import Root from "./label.svelte";
+import type { ComponentProps } from 'svelte';
+import Label from './label.svelte';
 
-export {
-	Root,
-	//
-	Root as Label,
-};
+type LabelProps = ComponentProps<typeof Label>;
+
+export { Label, type LabelProps };

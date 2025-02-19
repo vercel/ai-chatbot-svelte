@@ -1,0 +1,66 @@
+<script lang="ts">
+	import { Button } from './ui/button';
+	import {
+		getSidebarContext,
+		Sidebar,
+		SidebarContent,
+		SidebarFooter,
+		SidebarHeader,
+		SidebarMenu
+	} from './ui/sidebar';
+	import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
+	import { goto } from '$app/navigation';
+	import PlusIcon from './icons/plus-icon.svelte';
+	import type { User } from '$lib/server/db/schema';
+	import SidebarUserNav from './sidebar-user-nav.svelte';
+
+	let { user }: { user?: User } = $props();
+
+	const context = getSidebarContext();
+</script>
+
+<Sidebar class="group-data-[side=left]:border-r-0">
+	<SidebarHeader>
+		<SidebarMenu>
+			<div class="flex flex-row items-center justify-between">
+				<a
+					href="/"
+					onclick={() => {
+						context.setOpenMobile(false);
+					}}
+					class="flex flex-row items-center gap-3"
+				>
+					<span class="cursor-pointer rounded-md px-2 text-lg font-semibold hover:bg-muted">
+						Chatbot
+					</span>
+				</a>
+				<Tooltip>
+					<TooltipTrigger>
+						{#snippet child({ props })}
+							<Button
+								variant="ghost"
+								type="button"
+								class="h-fit p-2"
+								onclick={() => {
+									context.setOpenMobile(false);
+									goto('/');
+								}}
+							>
+								<PlusIcon />
+							</Button>
+						{/snippet}
+					</TooltipTrigger>
+					<TooltipContent align="end">New Chat</TooltipContent>
+				</Tooltip>
+			</div>
+		</SidebarMenu>
+	</SidebarHeader>
+	<SidebarContent>
+		<SidebarHistory {user} />
+	</SidebarContent>
+	<SidebarFooter>
+		{#if user}
+			<SidebarUserNav {user} />
+		{/if}
+	</SidebarFooter>
+</Sidebar>

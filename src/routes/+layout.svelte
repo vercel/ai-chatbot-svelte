@@ -1,8 +1,12 @@
 <script lang="ts">
-	import { Toaster } from '$lib/components/ui/sonner';
 	import '../app.css';
+	import { ThemeProvider } from '@sejohnson/svelte-themes';
+	import { Toaster } from '$lib/components/ui/sonner';
+
 	let { children } = $props();
 </script>
 
-<Toaster />
-{@render children()}
+<ThemeProvider attribute="class" disableTransitionOnChange>
+	<Toaster position="top-center" />
+	{@render children()}
+</ThemeProvider>

@@ -6,11 +6,27 @@
 		DropdownMenu,
 		DropdownMenuContent,
 		DropdownMenuItem,
+		DropdownMenuSeparator,
 		DropdownMenuTrigger
 	} from './ui/dropdown-menu';
 	import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from './ui/sidebar';
+	import { getTheme } from '@sejohnson/svelte-themes';
 
 	let { user }: { user: User } = $props();
+	const theme = getTheme();
+
+	const nextTheme = $derived.by(() => {
+		switch (theme.selectedTheme) {
+			case 'light':
+				return 'dark';
+			case 'dark':
+				return 'system';
+			case 'system':
+				return 'light';
+			default:
+				return 'light';
+		}
+	});
 </script>
 
 <SidebarMenu>
@@ -34,15 +50,11 @@
 					</SidebarMenuButton>
 				{/snippet}
 			</DropdownMenuTrigger>
-			<DropdownMenuContent side="top" class="TODO w-[--radix-popper-anchor-width]">
-				<!-- TODO -- needs work in root layout.tsx plus some other shenanigans -->
-				<!-- <DropdownMenuItem
-					class="cursor-pointer"
-					onSelect={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-				>
-					{`Toggle ${theme === 'light' ? 'dark' : 'light'} mode`}
+			<DropdownMenuContent side="top" class="TODO w-[--bits-floating-anchor-width]">
+				<DropdownMenuItem class="cursor-pointer" onSelect={() => (theme.selectedTheme = nextTheme)}>
+					{`Switch to ${nextTheme} mode`}
 				</DropdownMenuItem>
-				<DropdownMenuSeparator /> -->
+				<DropdownMenuSeparator />
 				<DropdownMenuItem>
 					{#snippet child({ props })}
 						<Button href="/signout" class="w-full cursor-pointer" {...props}>Sign out</Button>

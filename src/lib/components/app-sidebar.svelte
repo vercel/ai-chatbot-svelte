@@ -10,9 +10,10 @@
 	} from './ui/sidebar';
 	import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 	import { goto } from '$app/navigation';
-	import PlusIcon from './icons/plus-icon.svelte';
+	import PlusIcon from './icons/plus.svelte';
 	import type { User } from '$lib/server/db/schema';
 	import SidebarUserNav from './sidebar-user-nav.svelte';
+	import { SidebarHistory } from './sidebar-history';
 
 	let { user }: { user?: User } = $props();
 
@@ -45,6 +46,7 @@
 									context.setOpenMobile(false);
 									goto('/');
 								}}
+								{...props}
 							>
 								<PlusIcon />
 							</Button>

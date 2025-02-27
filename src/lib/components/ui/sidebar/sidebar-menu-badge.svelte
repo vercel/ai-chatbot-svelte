@@ -1,29 +1,29 @@
 <script lang="ts">
-	import { cn } from '$lib/utils/shadcn';
-	import type { WithElementRef } from '$lib/utils/types.js';
+	import { cn } from '$lib/utils/shadcn.js';
+	import type { WithElementRef } from 'bits-ui';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	let {
-		class: c,
-		children,
 		ref = $bindable(null),
-		...rest
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>, HTMLDivElement> = $props();
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLElement>> = $props();
 </script>
 
 <div
+	bind:this={ref}
 	data-sidebar="menu-badge"
 	class={cn(
-		'text-sidebar-foreground pointer-events-none absolute right-1 flex h-5 min-w-5 select-none items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums',
+		'pointer-events-none absolute right-1 flex h-5 min-w-5 select-none items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums text-sidebar-foreground',
 		'peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground',
 		'peer-data-[size=sm]/menu-button:top-1',
 		'peer-data-[size=default]/menu-button:top-1.5',
 		'peer-data-[size=lg]/menu-button:top-2.5',
 		'group-data-[collapsible=icon]:hidden',
-		c
+		className
 	)}
-	bind:this={ref}
-	{...rest}
+	{...restProps}
 >
 	{@render children?.()}
 </div>

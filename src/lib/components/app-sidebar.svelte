@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from './ui/button';
 	import {
-		getSidebarContext,
+		useSidebar,
 		Sidebar,
 		SidebarContent,
 		SidebarFooter,
@@ -17,7 +17,7 @@
 
 	let { user }: { user?: User } = $props();
 
-	const context = getSidebarContext();
+	const context = useSidebar();
 </script>
 
 <Sidebar class="group-data-[side=left]:border-r-0">

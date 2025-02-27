@@ -35,7 +35,7 @@
 			<DropdownMenuTrigger>
 				{#snippet child({ props })}
 					<SidebarMenuButton
-						class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-10 bg-background"
+						class="h-10 bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						{...props}
 					>
 						<img

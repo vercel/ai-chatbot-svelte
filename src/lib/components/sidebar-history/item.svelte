@@ -9,12 +9,7 @@
 		DropdownMenuSubTrigger,
 		DropdownMenuTrigger
 	} from '../ui/dropdown-menu';
-	import {
-		getSidebarContext,
-		SidebarMenuAction,
-		SidebarMenuButton,
-		SidebarMenuItem
-	} from '../ui/sidebar';
+	import { useSidebar, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar';
 	import TrashIcon from '../icons/trash.svelte';
 	import GlobeIcon from '../icons/globe.svelte';
 	import CheckCircleFillIcon from '../icons/check-circle-fill.svelte';
@@ -25,15 +20,15 @@
 
 	let {
 		chat,
-		active,
+		isActive,
 		ondelete
 	}: {
 		chat: Chat;
-		active: boolean;
+		isActive: boolean;
 		ondelete: (chatId: string) => void;
 	} = $props();
 
-	const context = getSidebarContext();
+	const context = useSidebar();
 
 	// TODO: actually make this do something
 	let visibilityType: 'private' | 'public' = $state('private');
@@ -43,7 +38,7 @@
 </script>
 
 <SidebarMenuItem>
-	<SidebarMenuButton {active}>
+	<SidebarMenuButton {isActive}>
 		{#snippet child({ props })}
 			<button
 				onclick={() => {
@@ -61,8 +56,8 @@
 		<DropdownMenuTrigger>
 			{#snippet child({ props })}
 				<SidebarMenuAction
-					class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground mr-0.5"
-					showOnHover={!active}
+					class="mr-0.5 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+					showOnHover={!isActive}
 					{...props}
 				>
 					<MoreHorizontalIcon />

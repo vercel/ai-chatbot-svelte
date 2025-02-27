@@ -1,24 +1,24 @@
 <script lang="ts">
-	import { cn } from '$lib/utils/shadcn';
-	import type { WithElementRef } from '$lib/utils/types.js';
 	import type { HTMLAttributes } from 'svelte/elements';
+	import type { WithElementRef } from 'bits-ui';
+	import { cn } from '$lib/utils/shadcn.js';
 
 	let {
-		class: c,
-		children,
 		ref = $bindable(null),
-		...rest
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>, HTMLDivElement> = $props();
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLElement>> = $props();
 </script>
 
 <div
+	bind:this={ref}
 	data-sidebar="content"
 	class={cn(
 		'flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
-		c
+		className
 	)}
-	bind:this={ref}
-	{...rest}
+	{...restProps}
 >
 	{@render children?.()}
 </div>

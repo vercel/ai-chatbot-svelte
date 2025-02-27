@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ChatItem from './item.svelte';
 	import type { Chat, User } from '$lib/server/db/schema';
-	import { getSidebarContext, SidebarGroup, SidebarGroupContent, SidebarMenu } from '../ui/sidebar';
+	import { useSidebar, SidebarGroup, SidebarGroupContent, SidebarMenu } from '../ui/sidebar';
 	import { page } from '$app/state';
 	import { subWeeks, subMonths, isToday, isYesterday } from 'date-fns';
 	import {
@@ -20,7 +20,7 @@
 	let loading = $state(false); // TODO
 	let history = $state([]); // TODO
 	let alertDialogOpen = $state(false);
-	const context = getSidebarContext();
+	const context = useSidebar();
 	const groupedChats = $derived(groupChatsByDate(history));
 
 	type GroupedChats = {
@@ -84,13 +84,13 @@
 	</SidebarGroup>
 {:else if loading}
 	<SidebarGroup>
-		<div class="text-sidebar-foreground/50 px-2 py-1 text-xs">Today</div>
+		<div class="px-2 py-1 text-xs text-sidebar-foreground/50">Today</div>
 		<SidebarGroupContent>
 			<div class="flex flex-col">
 				{#each [44, 32, 28, 64, 52] as item (item)}
 					<div class="flex h-8 items-center gap-2 rounded-md px-2">
 						<div
-							class="bg-sidebar-accent-foreground/10 h-4 max-w-[--skeleton-width] flex-1 rounded-md"
+							class="h-4 max-w-[--skeleton-width] flex-1 rounded-md bg-sidebar-accent-foreground/10"
 							style="--skeleton-width': {item}%"
 						></div>
 					</div>
@@ -114,13 +114,13 @@
 			<SidebarMenu>
 				{#each Object.entries(groupedChats) as [group, chats] (group)}
 					{#if chats.length > 0}
-						<div class="text-sidebar-foreground/50 px-2 py-1 text-xs">
+						<div class="px-2 py-1 text-xs text-sidebar-foreground/50">
 							{chatGroupTitles[group as keyof typeof chatGroupTitles]}
 						</div>
 						{#each chats as chat (chat.id)}
 							<ChatItem
 								{chat}
-								active={chat.id === page.params.chatId}
+								isActive={chat.id === page.params.chatId}
 								ondelete={(chatId) => {
 									// TODO
 									// setDeleteId(chatId);

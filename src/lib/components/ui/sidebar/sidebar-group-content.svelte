@@ -1,22 +1,20 @@
 <script lang="ts">
 	import { cn } from '$lib/utils/shadcn.js';
-	import { type WithElementRef } from 'bits-ui';
+	import type { WithElementRef } from 'bits-ui';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	let {
 		ref = $bindable(null),
 		class: className,
-		inset,
 		children,
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
-		inset?: boolean;
-	} = $props();
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
 </script>
 
 <div
 	bind:this={ref}
-	class={cn('px-2 py-1.5 text-sm font-semibold', inset && 'pl-8', className)}
+	data-sidebar="group-content"
+	class={cn('w-full text-sm', className)}
 	{...restProps}
 >
 	{@render children?.()}

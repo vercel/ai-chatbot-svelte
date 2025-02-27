@@ -1,59 +1,61 @@
 <script lang="ts">
+	import * as Sheet from '$lib/components/ui/sheet/index.js';
+	import { cn } from '$lib/utils/shadcn.js';
+	import type { WithElementRef } from 'bits-ui';
 	import type { HTMLAttributes } from 'svelte/elements';
-	import { getSidebarContext } from './context';
-	import { cn } from '$lib/utils/shadcn';
-	import { Sheet, SheetContent } from '../sheet';
-	import { SIDEBAR_WIDTH_MOBILE } from './constants';
+	import { SIDEBAR_WIDTH_MOBILE } from './constants.js';
+	import { useSidebar } from './context.svelte.js';
 
 	let {
+		ref = $bindable(null),
 		side = 'left',
 		variant = 'sidebar',
 		collapsible = 'offcanvas',
-		class: c,
+		class: className,
 		children,
-		ref = $bindable(null),
-		...rest
-	}: {
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
 		side?: 'left' | 'right';
 		variant?: 'sidebar' | 'floating' | 'inset';
 		collapsible?: 'offcanvas' | 'icon' | 'none';
-		ref?: HTMLDivElement | null;
-	} & HTMLAttributes<HTMLDivElement> = $props();
+	} = $props();
 
-	const context = getSidebarContext();
-
-	if (collapsible === 'none') {
-	}
+	const sidebar = useSidebar();
 </script>
 
 {#if collapsible === 'none'}
 	<div
-		class={cn('bg-sidebar text-sidebar-foreground flex h-full w-[--sidebar-width] flex-col', c)}
+		class={cn(
+			'flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground',
+			className
+		)}
 		bind:this={ref}
-		{...rest}
+		{...restProps}
 	>
 		{@render children?.()}
 	</div>
-{:else if context.isMobile}
-	<Sheet bind:open={context.open}>
-		<SheetContent
+{:else if sidebar.isMobile}
+	<Sheet.Root bind:open={() => sidebar.openMobile, (v) => sidebar.setOpenMobile(v)} {...restProps}>
+		<Sheet.Content
 			data-sidebar="sidebar"
 			data-mobile="true"
-			class="bg-sidebar text-sidebar-foreground w-[--sidebar-width] p-0 [&>button]:hidden"
+			class="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+			style="--sidebar-width: {SIDEBAR_WIDTH_MOBILE};"
 			{side}
-			style="--sidebar-width: {SIDEBAR_WIDTH_MOBILE}"
 		>
-			<div class="flex h-full w-full flex-col" bind:this={ref}>{@render children?.()}</div>
-		</SheetContent>
-	</Sheet>
+			<div class="flex h-full w-full flex-col">
+				{@render children?.()}
+			</div>
+		</Sheet.Content>
+	</Sheet.Root>
 {:else}
 	<div
-		class="text-sidebar-foreground group peer hidden md:block"
-		data-state={context.state}
-		data-collapsible={context.state === 'collapsed' ? collapsible : ''}
+		bind:this={ref}
+		class="group peer hidden text-sidebar-foreground md:block"
+		data-state={sidebar.state}
+		data-collapsible={sidebar.state === 'collapsed' ? collapsible : ''}
 		data-variant={variant}
 		data-side={side}
-		bind:this={ref}
 	>
 		<!-- This is what handles the sidebar gap on desktop -->
 		<div
@@ -76,13 +78,13 @@
 				variant === 'floating' || variant === 'inset'
 					? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]'
 					: 'group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l',
-				c
+				className
 			)}
-			{...rest}
+			{...restProps}
 		>
 			<div
 				data-sidebar="sidebar"
-				class="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow"
+				class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
 			>
 				{@render children?.()}
 			</div>

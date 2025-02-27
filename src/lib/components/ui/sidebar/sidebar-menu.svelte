@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { cn } from '$lib/utils/shadcn';
-	import type { WithElementRef } from '$lib/utils/types.js';
+	import { cn } from '$lib/utils/shadcn.js';
+	import type { WithElementRef } from 'bits-ui';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	let {
-		class: c,
-		children,
 		ref = $bindable(null),
-		...rest
+		class: className,
+		children,
+		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLUListElement>, HTMLUListElement> = $props();
 </script>
 
 <ul
-	data-sidebar="menu"
-	class={cn('flex w-full min-w-0 flex-col gap-1', c)}
 	bind:this={ref}
-	{...rest}
+	data-sidebar="menu"
+	class={cn('flex w-full min-w-0 flex-col gap-1', className)}
+	{...restProps}
 >
 	{@render children?.()}
 </ul>

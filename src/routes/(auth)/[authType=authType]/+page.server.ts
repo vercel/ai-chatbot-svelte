@@ -10,6 +10,12 @@ import { compare } from 'bcrypt-ts';
 import { err, ok, safeTry } from 'neverthrow';
 import { z } from 'zod';
 
+export function load({ locals }) {
+	if (locals.session) {
+		return redirect(307, '/');
+	}
+}
+
 const emailSchema = z.string().email();
 const passwordSchema = z.string().min(8);
 

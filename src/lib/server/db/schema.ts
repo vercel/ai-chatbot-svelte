@@ -93,11 +93,11 @@ export const document = pgTable(
 			.notNull()
 			.references(() => user.id)
 	},
-	(table) => {
-		return {
+	(table) => [
+		{
 			pk: primaryKey({ columns: [table.id, table.createdAt] })
-		};
-	}
+		}
+	]
 );
 
 export type Document = InferSelectModel<typeof document>;

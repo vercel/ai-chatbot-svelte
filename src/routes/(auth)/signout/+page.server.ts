@@ -7,5 +7,5 @@ export function load({ locals, cookies }) {
 		deleteSessionTokenCookie(cookies);
 	}
 
-	redirect(307, '/');
+	redirect(307, '/signin');
 }

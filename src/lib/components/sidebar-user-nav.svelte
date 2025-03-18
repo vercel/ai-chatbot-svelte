@@ -14,19 +14,6 @@
 
 	let { user }: { user: User } = $props();
 	const theme = getTheme();
-
-	const nextTheme = $derived.by(() => {
-		switch (theme.selectedTheme) {
-			case 'light':
-				return 'dark';
-			case 'dark':
-				return 'system';
-			case 'system':
-				return 'light';
-			default:
-				return 'light';
-		}
-	});
 </script>
 
 <SidebarMenu>
@@ -35,8 +22,8 @@
 			<DropdownMenuTrigger>
 				{#snippet child({ props })}
 					<SidebarMenuButton
-						class="h-10 bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						{...props}
+						class="h-10 bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 					>
 						<img
 							src={`https://avatar.vercel.sh/${user.email}`}
@@ -50,14 +37,24 @@
 					</SidebarMenuButton>
 				{/snippet}
 			</DropdownMenuTrigger>
-			<DropdownMenuContent side="top" class="TODO w-[--bits-floating-anchor-width]">
-				<DropdownMenuItem class="cursor-pointer" onSelect={() => (theme.selectedTheme = nextTheme)}>
-					{`Switch to ${nextTheme} mode`}
+			<DropdownMenuContent side="top" class="w-[--bits-floating-anchor-width]">
+				<DropdownMenuItem
+					class="cursor-pointer"
+					onSelect={() =>
+						(theme.selectedTheme = theme.resolvedTheme === 'light' ? 'dark' : 'light')}
+				>
+					Toggle {theme.resolvedTheme === 'light' ? 'dark' : 'light'} mode
 				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem>
 					{#snippet child({ props })}
-						<Button href="/signout" class="w-full cursor-pointer" {...props}>Sign out</Button>
+						<a
+							{...props}
+							href="/signout"
+							class="w-full cursor-pointer"
+							data-sveltekit-preload-data="false"
+							data-sveltekit-reload>Sign out</a
+						>
 					{/snippet}
 				</DropdownMenuItem>
 			</DropdownMenuContent>

@@ -3,6 +3,9 @@
 	import { SidebarInset, SidebarProvider } from '$lib/components/ui/sidebar';
 
 	let { data, children } = $props();
+
+	data.chatHistory.setContext();
+	data.selectedChatModel.setContext();
 </script>
 
 <SidebarProvider open={!data.sidebarCollapsed}>

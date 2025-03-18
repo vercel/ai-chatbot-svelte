@@ -21,6 +21,9 @@
 		"db:up": "drizzle-kit up"
 	},
 	"devDependencies": {
+		"@ai-sdk/fireworks": "^0.1.12",
+		"@ai-sdk/openai": "^1.1.14",
+		"@ai-sdk/svelte": "^2.0.0",
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
 		"@oslojs/crypto": "^1.0.1",
@@ -30,6 +33,7 @@
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@types/ms": "^2.1.0",
+		"ai": "^4.1.46",
 		"autoprefixer": "^10.4.20",
 		"bcrypt-ts": "^5.0.3",
 		"bits-ui": "1.3.4",

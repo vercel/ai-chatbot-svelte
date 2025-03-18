@@ -1,4 +1,4 @@
-import { DbEntityNotFoundError } from '$lib/errors/db/entity-not-found';
+import { DbEntityNotFoundError } from '$lib/errors/db';
 import { err, ok, Result } from 'neverthrow';
 
 export function unwrapSingleQueryResult<T>(

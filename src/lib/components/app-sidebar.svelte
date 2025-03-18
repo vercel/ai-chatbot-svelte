@@ -39,6 +39,7 @@
 					<TooltipTrigger>
 						{#snippet child({ props })}
 							<Button
+								{...props}
 								variant="ghost"
 								type="button"
 								class="h-fit p-2"
@@ -46,7 +47,6 @@
 									context.setOpenMobile(false);
 									goto('/');
 								}}
-								{...props}
 							>
 								<PlusIcon />
 							</Button>

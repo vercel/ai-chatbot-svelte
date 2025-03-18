@@ -21,7 +21,7 @@ type SheetHeaderProps = ComponentProps<typeof SheetHeader>;
 type SheetFooterProps = ComponentProps<typeof SheetFooter>;
 type SheetTitleProps = ComponentProps<typeof SheetTitle>;
 type SheetDescriptionProps = ComponentProps<typeof SheetDescription>;
-
+// TODO regenerate this (and probably the other components too) but keep the new type exports
 export {
 	Root as Sheet,
 	type SheetProps,

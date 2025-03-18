@@ -41,11 +41,11 @@
 	<SidebarMenuButton {isActive}>
 		{#snippet child({ props })}
 			<button
+				{...props}
 				onclick={() => {
 					goto(`/chat/${chat.id}`);
 					context.setOpenMobile(false);
 				}}
-				{...props}
 			>
 				<span>{chat.title}</span>
 			</button>
@@ -56,9 +56,9 @@
 		<DropdownMenuTrigger>
 			{#snippet child({ props })}
 				<SidebarMenuAction
+					{...props}
 					class="mr-0.5 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 					showOnHover={!isActive}
-					{...props}
 				>
 					<MoreHorizontalIcon />
 					<span class="sr-only">More</span>

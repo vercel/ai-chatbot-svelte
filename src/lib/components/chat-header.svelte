@@ -7,22 +7,24 @@
 	import PlusIcon from './icons/plus.svelte';
 	import { goto } from '$app/navigation';
 	import ModelSelector from './model-selector.svelte';
-	import type { Chat } from '$lib/server/db/schema';
+	import type { Chat, User } from '$lib/server/db/schema';
 	import VisibilitySelector from './visibility-selector.svelte';
 	import VercelIcon from './icons/vercel.svelte';
 
 	let {
+		user,
 		chat,
 		readonly
 	}: {
-		chat?: Chat;
+		user: User | undefined;
+		chat: Chat | undefined;
 		readonly: boolean;
 	} = $props();
 
 	const sidebar = useSidebar();
 </script>
 
-<header class="sticky top-0 flex items-center gap-2 bg-background px-2 py-1.5 md:px-2">
+<header class="sticky top-0 flex items-center gap-2 bg-background p-2">
 	<SidebarToggle />
 
 	{#if !sidebar.open || (innerWidth.current ?? 768) < 768}
@@ -54,6 +56,10 @@
 
 	{#if !readonly && chat}
 		<VisibilitySelector {chat} class="order-1 md:order-3" />
+	{/if}
+
+	{#if !user}
+		<Button href="/signin" class="order-5 px-2 py-1.5 md:h-[34px]">Sign In</Button>
 	{/if}
 
 	<Button

@@ -2,8 +2,10 @@
 	import type { Chat } from '@ai-sdk/svelte';
 	import { Button } from './ui/button';
 	import { fly } from 'svelte/transition';
+	import { replaceState } from '$app/navigation';
+	import type { User } from '$lib/server/db/schema';
 
-	let { chatClient }: { chatClient: Chat } = $props();
+	let { user, chatClient }: { user: User | undefined; chatClient: Chat } = $props();
 
 	const suggestedActions = [
 		{
@@ -32,15 +34,16 @@
 <div class="grid w-full gap-2 sm:grid-cols-2">
 	{#each suggestedActions as suggestedAction, i (suggestedAction.title)}
 		<div
-			transition:fly|global={{ opacity: 0, y: 20, delay: 50 * i, duration: 400 }}
+			in:fly|global={{ opacity: 0, y: 20, delay: 50 * i, duration: 400 }}
 			class={i > 1 ? 'hidden sm:block' : 'block'}
 		>
 			<Button
 				variant="ghost"
-				onclick={() => {
-					window.history.replaceState({}, '', `/chat/${chatClient.id}`);
-
-					chatClient.append({
+				onclick={async () => {
+					if (user) {
+						replaceState(`/chat/${chatClient.id}`, {});
+					}
+					await chatClient.append({
 						role: 'user',
 						content: suggestedAction.action
 					});

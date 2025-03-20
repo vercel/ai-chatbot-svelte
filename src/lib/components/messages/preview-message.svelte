@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { cn } from '$lib/utils/shadcn';
-	import type { Message } from 'ai';
 	import SparklesIcon from '../icons/sparkles.svelte';
 	import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 	import { Button } from '../ui/button';
@@ -9,8 +8,9 @@
 	import { Markdown } from '../markdown';
 	import MessageReasoning from '../message-reasoning.svelte';
 	import { fly } from 'svelte/transition';
+	import type { UIMessage } from '@ai-sdk/svelte';
 
-	let { message, readonly, loading }: { message: Message; readonly: boolean; loading: boolean } =
+	let { message, readonly, loading }: { message: UIMessage; readonly: boolean; loading: boolean } =
 		$props();
 
 	let mode = $state<'view' | 'edit'>('view');
@@ -19,7 +19,7 @@
 <div
 	class="group/message mx-auto w-full max-w-3xl px-4"
 	data-role={message.role}
-	in:fly={{ opacity: 0, y: 5 }}
+	in:fly|global={{ opacity: 0, y: 5 }}
 >
 	<div
 		class={cn(

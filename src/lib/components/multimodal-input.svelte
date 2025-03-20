@@ -14,13 +14,17 @@
 	import StopIcon from './icons/stop.svelte';
 	import ArrowUpIcon from './icons/arrow-up.svelte';
 	import SuggestedActions from './suggested-actions.svelte';
+	import { replaceState } from '$app/navigation';
+	import type { User } from '$lib/server/db/schema';
 
 	let {
 		attachments = $bindable(),
+		user,
 		chatClient,
 		class: c
 	}: {
 		attachments: Attachment[];
+		user: User | undefined;
 		chatClient: Chat;
 		class?: string;
 	} = $props();
@@ -52,7 +56,9 @@
 	}
 
 	async function submitForm(event?: Event) {
-		window.history.replaceState({}, '', `/chat/${chatClient.id}`);
+		if (user) {
+			replaceState(`/chat/${chatClient.id}`, {});
+		}
 
 		await chatClient.handleSubmit(event, {
 			experimental_attachments: attachments
@@ -129,7 +135,7 @@
 
 <div class="relative flex w-full flex-col gap-4">
 	{#if mounted && chatClient.messages.length === 0 && attachments.length === 0 && uploadQueue.length === 0}
-		<SuggestedActions {chatClient} />
+		<SuggestedActions {user} {chatClient} />
 	{/if}
 
 	<input

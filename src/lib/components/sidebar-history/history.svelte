@@ -17,6 +17,7 @@
 	import { ChatHistory } from '$lib/hooks/chat-history.svelte';
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
+	import { Skeleton } from '../ui/skeleton';
 
 	let { user }: { user?: User } = $props();
 	const chatHistory = ChatHistory.fromContext();
@@ -111,6 +112,22 @@
 				class="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500"
 			>
 				Login to save and revisit previous chats!
+			</div>
+		</SidebarGroupContent>
+	</SidebarGroup>
+{:else if chatHistory.loading}
+	<SidebarGroup>
+		<div class="px-2 py-1 text-xs text-sidebar-foreground/50">Today</div>
+		<SidebarGroupContent>
+			<div class="flex flex-col">
+				{#each [44, 32, 28, 64, 52] as width (width)}
+					<div class="flex h-8 items-center gap-2 rounded-md px-2">
+						<Skeleton
+							class="h-4 max-w-[--skeleton-width] flex-1 bg-sidebar-accent-foreground/10"
+							style="--skeleton-width: {width}%"
+						/>
+					</div>
+				{/each}
 			</div>
 		</SidebarGroupContent>
 	</SidebarGroup>

@@ -23,7 +23,7 @@
 <Sidebar class="group-data-[side=left]:border-r-0">
 	<SidebarHeader>
 		<SidebarMenu>
-			<div class="flex flex-row items-center justify-between">
+			<div class="flex h-10 flex-row items-center justify-between md:h-[34px]">
 				<a
 					href="/"
 					onclick={() => {

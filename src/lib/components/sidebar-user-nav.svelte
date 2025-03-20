@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { User } from '$lib/server/db/schema';
+	import { cn } from '$lib/utils/shadcn';
 	import ChevronUp from './icons/chevron-up.svelte';
 	import {
 		DropdownMenu,
@@ -50,7 +51,7 @@
 						<a
 							{...props}
 							href="/signout"
-							class="w-full cursor-pointer"
+							class={cn('w-full cursor-pointer', props.class as string)}
 							data-sveltekit-preload-data="false"
 							data-sveltekit-reload>Sign out</a
 						>

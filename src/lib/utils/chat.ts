@@ -1,5 +1,6 @@
 import type { CoreAssistantMessage, CoreToolMessage, Message, ToolInvocation } from 'ai';
 import type { Message as DBMessage, Document } from '$lib/server/db/schema';
+import type { UIMessage } from '@ai-sdk/svelte';
 
 function addToolMessageToChat({
 	toolMessage,
@@ -127,7 +128,7 @@ export function sanitizeResponseMessages({
 	return messagesBySanitizedContent.filter((message) => message.content.length > 0);
 }
 
-export function sanitizeUIMessages(messages: Array<Message>): Array<Message> {
+export function sanitizeUIMessages(messages: Array<UIMessage>): Array<UIMessage> {
 	const messagesBySanitizedToolInvocations = messages.map((message) => {
 		if (message.role !== 'assistant') return message;
 

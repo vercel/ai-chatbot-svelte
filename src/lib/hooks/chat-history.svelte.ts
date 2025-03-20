@@ -6,10 +6,27 @@ import { toast } from 'svelte-sonner';
 const contextKey = Symbol('ChatHistory');
 
 export class ChatHistory {
+	#loading = $state(false);
+	#revalidating = $state(false);
 	chats = $state<Chat[]>([]);
 
-	constructor(chats: Chat[]) {
-		this.chats = chats;
+	get loading() {
+		return this.#loading;
+	}
+
+	get revalidating() {
+		return this.#revalidating;
+	}
+
+	constructor(chatsPromise: Promise<Chat[]>) {
+		this.#loading = true;
+		this.#revalidating = true;
+		chatsPromise
+			.then((chats) => (this.chats = chats))
+			.finally(() => {
+				this.#loading = false;
+				this.#revalidating = false;
+			});
 	}
 
 	getChatDetails = (chatId: string) => {
@@ -40,9 +57,14 @@ export class ChatHistory {
 	}
 
 	async refetch() {
-		const res = await fetch('/api/history');
-		if (res.ok) {
-			this.chats = await res.json();
+		this.#revalidating = true;
+		try {
+			const res = await fetch('/api/history');
+			if (res.ok) {
+				this.chats = await res.json();
+			}
+		} finally {
+			this.#revalidating = false;
 		}
 	}
 

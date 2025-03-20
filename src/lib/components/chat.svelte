@@ -7,7 +7,6 @@
 	import type { Chat as DbChat } from '$lib/server/db/schema';
 	import Messages from './messages.svelte';
 	import MultimodalInput from './multimodal-input.svelte';
-	import { invalidate } from '$app/navigation';
 
 	let {
 		chat,

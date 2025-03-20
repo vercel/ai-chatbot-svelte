@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { User } from '$lib/server/db/schema';
 	import ChevronUp from './icons/chevron-up.svelte';
-	import { Button } from './ui/button';
 	import {
 		DropdownMenu,
 		DropdownMenuContent,

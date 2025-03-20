@@ -14,7 +14,6 @@
 				{...props}
 				onclick={() => {
 					sidebar.toggle();
-					sidebar.open;
 				}}
 				variant="outline"
 				class="md:h-fit md:px-2"

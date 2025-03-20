@@ -88,7 +88,7 @@
 			}
 			const { message } = await response.json();
 			toast.error(message);
-		} catch (error) {
+		} catch {
 			toast.error('Failed to upload file, please try again!');
 		}
 	}

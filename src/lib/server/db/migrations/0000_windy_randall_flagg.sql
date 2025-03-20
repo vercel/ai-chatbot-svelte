@@ -12,8 +12,7 @@ CREATE TABLE "Document" (
 	"title" text NOT NULL,
 	"content" text,
 	"text" varchar DEFAULT 'text' NOT NULL,
-	"userId" uuid NOT NULL,
-	CONSTRAINT "Document_id_createdAt_pk" PRIMARY KEY("id","createdAt")
+	"userId" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "Message" (

@@ -42,3 +42,8 @@ jobs:
           CI: true
 
       - run: pnpm check
+        env:
+          POSTGRES_URL: ''
+          OPENAI_API_KEY: ''
+          FIREWORKS_API_KEY: ''
+          BLOB_READ_WRITE_TOKEN: ''

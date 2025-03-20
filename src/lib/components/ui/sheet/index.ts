@@ -1,28 +1,40 @@
 import { Dialog as SheetPrimitive } from 'bits-ui';
-import SheetOverlay from './sheet-overlay.svelte';
-import SheetContent from './sheet-content.svelte';
-import SheetHeader from './sheet-header.svelte';
-import SheetFooter from './sheet-footer.svelte';
-import SheetTitle from './sheet-title.svelte';
-import SheetDescription from './sheet-description.svelte';
+import Overlay from './sheet-overlay.svelte';
+import Content from './sheet-content.svelte';
+import Header from './sheet-header.svelte';
+import Footer from './sheet-footer.svelte';
+import Title from './sheet-title.svelte';
+import Description from './sheet-description.svelte';
 import type { ComponentProps } from 'svelte';
 
 const Root = SheetPrimitive.Root;
-type SheetProps = ComponentProps<typeof SheetPrimitive.Root>;
 const Close = SheetPrimitive.Close;
-type CloseProps = ComponentProps<typeof SheetPrimitive.Close>;
 const Trigger = SheetPrimitive.Trigger;
-type TriggerProps = ComponentProps<typeof SheetPrimitive.Trigger>;
 const Portal = SheetPrimitive.Portal;
-type SheetPortalProps = ComponentProps<typeof SheetPrimitive.Portal>;
-type SheetOverlayProps = ComponentProps<typeof SheetOverlay>;
-type SheetContentProps = ComponentProps<typeof SheetContent>;
-type SheetHeaderProps = ComponentProps<typeof SheetHeader>;
-type SheetFooterProps = ComponentProps<typeof SheetFooter>;
-type SheetTitleProps = ComponentProps<typeof SheetTitle>;
-type SheetDescriptionProps = ComponentProps<typeof SheetDescription>;
-// TODO regenerate this (and probably the other components too) but keep the new type exports
+
+type SheetProps = ComponentProps<typeof Root>;
+type CloseProps = ComponentProps<typeof Close>;
+type TriggerProps = ComponentProps<typeof Trigger>;
+type SheetPortalProps = ComponentProps<typeof Portal>;
+type SheetOverlayProps = ComponentProps<typeof Overlay>;
+type SheetContentProps = ComponentProps<typeof Content>;
+type SheetHeaderProps = ComponentProps<typeof Header>;
+type SheetFooterProps = ComponentProps<typeof Footer>;
+type SheetTitleProps = ComponentProps<typeof Title>;
+type SheetDescriptionProps = ComponentProps<typeof Description>;
+
 export {
+	Root,
+	Close,
+	Trigger,
+	Portal,
+	Overlay,
+	Content,
+	Header,
+	Footer,
+	Title,
+	Description,
+	//
 	Root as Sheet,
 	type SheetProps,
 	Close as SheetClose,
@@ -31,16 +43,16 @@ export {
 	type TriggerProps,
 	Portal as SheetPortal,
 	type SheetPortalProps,
-	SheetOverlay,
+	Overlay as SheetOverlay,
 	type SheetOverlayProps,
-	SheetContent,
+	Content as SheetContent,
 	type SheetContentProps,
-	SheetHeader,
+	Header as SheetHeader,
 	type SheetHeaderProps,
-	SheetFooter,
+	Footer as SheetFooter,
 	type SheetFooterProps,
-	SheetTitle,
+	Title as SheetTitle,
 	type SheetTitleProps,
-	SheetDescription,
+	Description as SheetDescription,
 	type SheetDescriptionProps
 };

@@ -1,67 +1,82 @@
 import { DropdownMenu as DropdownMenuPrimitive } from 'bits-ui';
-import DropdownMenuCheckboxItem from './dropdown-menu-checkbox-item.svelte';
-import DropdownMenuContent from './dropdown-menu-content.svelte';
-import DropdownMenuGroupHeading from './dropdown-menu-group-heading.svelte';
-import DropdownMenuItem from './dropdown-menu-item.svelte';
-import DropdownMenuLabel from './dropdown-menu-label.svelte';
-import DropdownMenuRadioItem from './dropdown-menu-radio-item.svelte';
-import DropdownMenuSeparator from './dropdown-menu-separator.svelte';
-import DropdownMenuShortcut from './dropdown-menu-shortcut.svelte';
-import DropdownMenuSubContent from './dropdown-menu-sub-content.svelte';
-import DropdownMenuSubTrigger from './dropdown-menu-sub-trigger.svelte';
+import CheckboxItem from './dropdown-menu-checkbox-item.svelte';
+import Content from './dropdown-menu-content.svelte';
+import GroupHeading from './dropdown-menu-group-heading.svelte';
+import Item from './dropdown-menu-item.svelte';
+import Label from './dropdown-menu-label.svelte';
+import RadioItem from './dropdown-menu-radio-item.svelte';
+import Separator from './dropdown-menu-separator.svelte';
+import Shortcut from './dropdown-menu-shortcut.svelte';
+import SubContent from './dropdown-menu-sub-content.svelte';
+import SubTrigger from './dropdown-menu-sub-trigger.svelte';
 import type { ComponentProps } from 'svelte';
 
-const DropdownMenuSub = DropdownMenuPrimitive.Sub;
-type DropdownMenuSubProps = ComponentProps<typeof DropdownMenuSub>;
-const DropdownMenu = DropdownMenuPrimitive.Root;
-type DropdownMenuProps = ComponentProps<typeof DropdownMenu>;
-const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
-type DropdownMenuTriggerProps = ComponentProps<typeof DropdownMenuTrigger>;
-const DropdownMenuGroup = DropdownMenuPrimitive.Group;
-type DropdownMenuGroupProps = ComponentProps<typeof DropdownMenuGroup>;
-const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
-type DropdownMenuRadioGroupProps = ComponentProps<typeof DropdownMenuRadioGroup>;
+const Sub = DropdownMenuPrimitive.Sub;
+const Root = DropdownMenuPrimitive.Root;
+const Trigger = DropdownMenuPrimitive.Trigger;
+const Group = DropdownMenuPrimitive.Group;
+const RadioGroup = DropdownMenuPrimitive.RadioGroup;
 
-type DropdownMenuCheckboxItemProps = ComponentProps<typeof DropdownMenuCheckboxItem>;
-type DropdownMenuContentProps = ComponentProps<typeof DropdownMenuContent>;
-type DropdownMenuGroupHeadingProps = ComponentProps<typeof DropdownMenuGroupHeading>;
-type DropdownMenuItemProps = ComponentProps<typeof DropdownMenuItem>;
-type DropdownMenuLabelProps = ComponentProps<typeof DropdownMenuLabel>;
-type DropdownMenuRadioItemProps = ComponentProps<typeof DropdownMenuRadioItem>;
-type DropdownMenuSeparatorProps = ComponentProps<typeof DropdownMenuSeparator>;
-type DropdownMenuShortcutProps = ComponentProps<typeof DropdownMenuShortcut>;
-type DropdownMenuSubContentProps = ComponentProps<typeof DropdownMenuSubContent>;
-type DropdownMenuSubTriggerProps = ComponentProps<typeof DropdownMenuSubTrigger>;
+type DropdownMenuSubProps = ComponentProps<typeof Sub>;
+type DropdownMenuProps = ComponentProps<typeof Root>;
+type DropdownMenuTriggerProps = ComponentProps<typeof Trigger>;
+type DropdownMenuGroupProps = ComponentProps<typeof Group>;
+type DropdownMenuRadioGroupProps = ComponentProps<typeof RadioGroup>;
+type DropdownMenuCheckboxItemProps = ComponentProps<typeof CheckboxItem>;
+type DropdownMenuContentProps = ComponentProps<typeof Content>;
+type DropdownMenuGroupHeadingProps = ComponentProps<typeof GroupHeading>;
+type DropdownMenuItemProps = ComponentProps<typeof Item>;
+type DropdownMenuLabelProps = ComponentProps<typeof Label>;
+type DropdownMenuRadioItemProps = ComponentProps<typeof RadioItem>;
+type DropdownMenuSeparatorProps = ComponentProps<typeof Separator>;
+type DropdownMenuShortcutProps = ComponentProps<typeof Shortcut>;
+type DropdownMenuSubContentProps = ComponentProps<typeof SubContent>;
+type DropdownMenuSubTriggerProps = ComponentProps<typeof SubTrigger>;
 
 export {
-	DropdownMenu,
+	CheckboxItem,
+	Content,
+	Root as DropdownMenu,
 	type DropdownMenuProps,
-	DropdownMenuCheckboxItem,
+	CheckboxItem as DropdownMenuCheckboxItem,
 	type DropdownMenuCheckboxItemProps,
-	DropdownMenuContent,
+	Content as DropdownMenuContent,
 	type DropdownMenuContentProps,
-	DropdownMenuGroup,
+	Group as DropdownMenuGroup,
 	type DropdownMenuGroupProps,
-	DropdownMenuGroupHeading,
+	GroupHeading as DropdownMenuGroupHeading,
 	type DropdownMenuGroupHeadingProps,
-	DropdownMenuItem,
+	Item as DropdownMenuItem,
 	type DropdownMenuItemProps,
-	DropdownMenuLabel,
+	Label as DropdownMenuLabel,
 	type DropdownMenuLabelProps,
-	DropdownMenuRadioGroup,
+	RadioGroup as DropdownMenuRadioGroup,
 	type DropdownMenuRadioGroupProps,
-	DropdownMenuRadioItem,
+	RadioItem as DropdownMenuRadioItem,
 	type DropdownMenuRadioItemProps,
-	DropdownMenuSeparator,
+	Separator as DropdownMenuSeparator,
 	type DropdownMenuSeparatorProps,
-	DropdownMenuShortcut,
+	Shortcut as DropdownMenuShortcut,
 	type DropdownMenuShortcutProps,
-	DropdownMenuSub,
+	Sub as DropdownMenuSub,
 	type DropdownMenuSubProps,
-	DropdownMenuSubContent,
+	SubContent as DropdownMenuSubContent,
 	type DropdownMenuSubContentProps,
-	DropdownMenuSubTrigger,
+	SubTrigger as DropdownMenuSubTrigger,
 	type DropdownMenuSubTriggerProps,
-	DropdownMenuTrigger,
-	type DropdownMenuTriggerProps
+	Trigger as DropdownMenuTrigger,
+	type DropdownMenuTriggerProps,
+	Group,
+	GroupHeading,
+	Item,
+	Label,
+	RadioGroup,
+	RadioItem,
+	Root,
+	Separator,
+	Shortcut,
+	Sub,
+	SubContent,
+	SubTrigger,
+	Trigger
 };

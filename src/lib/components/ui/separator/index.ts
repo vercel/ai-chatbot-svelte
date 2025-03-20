@@ -1,6 +1,11 @@
 import type { ComponentProps } from 'svelte';
-import Separator from './separator.svelte';
+import Root from './separator.svelte';
 
-type SeparatorProps = ComponentProps<typeof Separator>;
+type SeparatorProps = ComponentProps<typeof Root>;
 
-export { Separator, type SeparatorProps };
+export {
+	Root,
+	//
+	Root as Separator,
+	type SeparatorProps
+};

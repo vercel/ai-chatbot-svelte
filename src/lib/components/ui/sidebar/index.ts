@@ -1,99 +1,123 @@
 import type { ComponentProps } from 'svelte';
 import { useSidebar } from './context.svelte.js';
-import SidebarContent from './sidebar-content.svelte';
-import SidebarFooter from './sidebar-footer.svelte';
-import SidebarGroupAction from './sidebar-group-action.svelte';
-import SidebarGroupContent from './sidebar-group-content.svelte';
-import SidebarGroupLabel from './sidebar-group-label.svelte';
-import SidebarGroup from './sidebar-group.svelte';
-import SidebarHeader from './sidebar-header.svelte';
-import SidebarInput from './sidebar-input.svelte';
-import SidebarInset from './sidebar-inset.svelte';
-import SidebarMenuAction from './sidebar-menu-action.svelte';
-import SidebarMenuBadge from './sidebar-menu-badge.svelte';
-import SidebarMenuButton from './sidebar-menu-button.svelte';
-import SidebarMenuItem from './sidebar-menu-item.svelte';
-import SidebarMenuSkeleton from './sidebar-menu-skeleton.svelte';
-import SidebarMenuSubButton from './sidebar-menu-sub-button.svelte';
-import SidebarMenuSubItem from './sidebar-menu-sub-item.svelte';
-import SidebarMenuSub from './sidebar-menu-sub.svelte';
-import SidebarMenu from './sidebar-menu.svelte';
-import SidebarProvider from './sidebar-provider.svelte';
-import SidebarRail from './sidebar-rail.svelte';
-import SidebarSeparator from './sidebar-separator.svelte';
-import SidebarTrigger from './sidebar-trigger.svelte';
-import Sidebar from './sidebar.svelte';
+import Content from './sidebar-content.svelte';
+import Footer from './sidebar-footer.svelte';
+import GroupAction from './sidebar-group-action.svelte';
+import GroupContent from './sidebar-group-content.svelte';
+import GroupLabel from './sidebar-group-label.svelte';
+import Group from './sidebar-group.svelte';
+import Header from './sidebar-header.svelte';
+import Input from './sidebar-input.svelte';
+import Inset from './sidebar-inset.svelte';
+import MenuAction from './sidebar-menu-action.svelte';
+import MenuBadge from './sidebar-menu-badge.svelte';
+import MenuButton from './sidebar-menu-button.svelte';
+import MenuItem from './sidebar-menu-item.svelte';
+import MenuSkeleton from './sidebar-menu-skeleton.svelte';
+import MenuSubButton from './sidebar-menu-sub-button.svelte';
+import MenuSubItem from './sidebar-menu-sub-item.svelte';
+import MenuSub from './sidebar-menu-sub.svelte';
+import Menu from './sidebar-menu.svelte';
+import Provider from './sidebar-provider.svelte';
+import Rail from './sidebar-rail.svelte';
+import Separator from './sidebar-separator.svelte';
+import Trigger from './sidebar-trigger.svelte';
+import Root from './sidebar.svelte';
 
-type SidebarProps = ComponentProps<typeof Sidebar>;
-type SidebarContentProps = ComponentProps<typeof SidebarContent>;
-type SidebarFooterProps = ComponentProps<typeof SidebarFooter>;
-type SidebarGroupProps = ComponentProps<typeof SidebarGroup>;
-type SidebarGroupActionProps = ComponentProps<typeof SidebarGroupAction>;
-type SidebarGroupContentProps = ComponentProps<typeof SidebarGroupContent>;
-type SidebarGroupLabelProps = ComponentProps<typeof SidebarGroupLabel>;
-type SidebarHeaderProps = ComponentProps<typeof SidebarHeader>;
-type SidebarInputProps = ComponentProps<typeof SidebarInput>;
-type SidebarInsetProps = ComponentProps<typeof SidebarInset>;
-type SidebarMenuProps = ComponentProps<typeof SidebarMenu>;
-type SidebarMenuActionProps = ComponentProps<typeof SidebarMenuAction>;
-type SidebarMenuBadgeProps = ComponentProps<typeof SidebarMenuBadge>;
-type SidebarMenuButtonProps = ComponentProps<typeof SidebarMenuButton>;
-type SidebarMenuItemProps = ComponentProps<typeof SidebarMenuItem>;
-type SidebarMenuSkeletonProps = ComponentProps<typeof SidebarMenuSkeleton>;
-type SidebarMenuSubProps = ComponentProps<typeof SidebarMenuSub>;
-type SidebarMenuSubButtonProps = ComponentProps<typeof SidebarMenuSubButton>;
-type SidebarMenuSubItemProps = ComponentProps<typeof SidebarMenuSubItem>;
-type SidebarProviderProps = ComponentProps<typeof SidebarProvider>;
-type SidebarRailProps = ComponentProps<typeof SidebarRail>;
-type SidebarSeparatorProps = ComponentProps<typeof SidebarSeparator>;
-type SidebarTriggerProps = ComponentProps<typeof SidebarTrigger>;
+type SidebarProps = ComponentProps<typeof Root>;
+type SidebarContentProps = ComponentProps<typeof Content>;
+type SidebarFooterProps = ComponentProps<typeof Footer>;
+type SidebarGroupProps = ComponentProps<typeof Group>;
+type SidebarGroupActionProps = ComponentProps<typeof GroupAction>;
+type SidebarGroupContentProps = ComponentProps<typeof GroupContent>;
+type SidebarGroupLabelProps = ComponentProps<typeof GroupLabel>;
+type SidebarHeaderProps = ComponentProps<typeof Header>;
+type SidebarInputProps = ComponentProps<typeof Input>;
+type SidebarInsetProps = ComponentProps<typeof Inset>;
+type SidebarMenuProps = ComponentProps<typeof Menu>;
+type SidebarMenuActionProps = ComponentProps<typeof MenuAction>;
+type SidebarMenuBadgeProps = ComponentProps<typeof MenuBadge>;
+type SidebarMenuButtonProps = ComponentProps<typeof MenuButton>;
+type SidebarMenuItemProps = ComponentProps<typeof MenuItem>;
+type SidebarMenuSkeletonProps = ComponentProps<typeof MenuSkeleton>;
+type SidebarMenuSubProps = ComponentProps<typeof MenuSub>;
+type SidebarMenuSubButtonProps = ComponentProps<typeof MenuSubButton>;
+type SidebarMenuSubItemProps = ComponentProps<typeof MenuSubItem>;
+type SidebarProviderProps = ComponentProps<typeof Provider>;
+type SidebarRailProps = ComponentProps<typeof Rail>;
+type SidebarSeparatorProps = ComponentProps<typeof Separator>;
+type SidebarTriggerProps = ComponentProps<typeof Trigger>;
 
 export {
-	Sidebar,
+	Content,
+	Footer,
+	Group,
+	GroupAction,
+	GroupContent,
+	GroupLabel,
+	Header,
+	Input,
+	Inset,
+	Menu,
+	MenuAction,
+	MenuBadge,
+	MenuButton,
+	MenuItem,
+	MenuSkeleton,
+	MenuSub,
+	MenuSubButton,
+	MenuSubItem,
+	Provider,
+	Rail,
+	Root,
+	Separator,
+	//
+	Root as Sidebar,
 	type SidebarProps,
-	SidebarContent,
+	Content as SidebarContent,
 	type SidebarContentProps,
-	SidebarFooter,
+	Footer as SidebarFooter,
 	type SidebarFooterProps,
-	SidebarGroup,
+	Group as SidebarGroup,
 	type SidebarGroupProps,
-	SidebarGroupAction,
+	GroupAction as SidebarGroupAction,
 	type SidebarGroupActionProps,
-	SidebarGroupContent,
+	GroupContent as SidebarGroupContent,
 	type SidebarGroupContentProps,
-	SidebarGroupLabel,
+	GroupLabel as SidebarGroupLabel,
 	type SidebarGroupLabelProps,
-	SidebarHeader,
+	Header as SidebarHeader,
 	type SidebarHeaderProps,
-	SidebarInput,
+	Input as SidebarInput,
 	type SidebarInputProps,
-	SidebarInset,
+	Inset as SidebarInset,
 	type SidebarInsetProps,
-	SidebarMenu,
+	Menu as SidebarMenu,
 	type SidebarMenuProps,
-	SidebarMenuAction,
+	MenuAction as SidebarMenuAction,
 	type SidebarMenuActionProps,
-	SidebarMenuBadge,
+	MenuBadge as SidebarMenuBadge,
 	type SidebarMenuBadgeProps,
-	SidebarMenuButton,
+	MenuButton as SidebarMenuButton,
 	type SidebarMenuButtonProps,
-	SidebarMenuItem,
+	MenuItem as SidebarMenuItem,
 	type SidebarMenuItemProps,
-	SidebarMenuSkeleton,
+	MenuSkeleton as SidebarMenuSkeleton,
 	type SidebarMenuSkeletonProps,
-	SidebarMenuSub,
+	MenuSub as SidebarMenuSub,
 	type SidebarMenuSubProps,
-	SidebarMenuSubButton,
+	MenuSubButton as SidebarMenuSubButton,
 	type SidebarMenuSubButtonProps,
-	SidebarMenuSubItem,
+	MenuSubItem as SidebarMenuSubItem,
 	type SidebarMenuSubItemProps,
-	SidebarProvider,
+	Provider as SidebarProvider,
 	type SidebarProviderProps,
-	SidebarRail,
+	Rail as SidebarRail,
 	type SidebarRailProps,
-	SidebarSeparator,
+	Separator as SidebarSeparator,
 	type SidebarSeparatorProps,
-	SidebarTrigger,
+	Trigger as SidebarTrigger,
 	type SidebarTriggerProps,
+	Trigger,
 	useSidebar
 };

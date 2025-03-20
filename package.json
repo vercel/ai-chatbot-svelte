@@ -23,7 +23,7 @@
 	"devDependencies": {
 		"@ai-sdk/fireworks": "^0.1.12",
 		"@ai-sdk/openai": "^1.1.14",
-		"@ai-sdk/svelte": "^2.0.0",
+		"@ai-sdk/svelte": "^2.0.4",
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
 		"@lucide/svelte": "^0.483.0",

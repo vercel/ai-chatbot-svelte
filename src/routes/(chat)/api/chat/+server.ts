@@ -93,6 +93,8 @@ export async function POST({ request, locals: { user }, cookies }) {
 				}
 			});
 
+			result.consumeStream();
+
 			result.mergeIntoDataStream(dataStream, {
 				sendReasoning: true
 			});

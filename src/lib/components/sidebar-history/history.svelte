@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ChatItem from './item.svelte';
 	import type { Chat, User } from '$lib/server/db/schema';
-	import { useSidebar, SidebarGroup, SidebarGroupContent, SidebarMenu } from '../ui/sidebar';
+	import { SidebarGroup, SidebarGroupContent, SidebarMenu } from '../ui/sidebar';
 	import { page } from '$app/state';
 	import { subWeeks, subMonths, isToday, isYesterday } from 'date-fns';
 	import {
@@ -14,14 +14,15 @@
 		AlertDialogHeader,
 		AlertDialogTitle
 	} from '../ui/alert-dialog';
+	import { ChatHistory } from '$lib/hooks/chat-history.svelte';
+	import { toast } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
 
 	let { user }: { user?: User } = $props();
-
-	let loading = $state(false); // TODO
-	let history = $state([]); // TODO
+	const chatHistory = ChatHistory.fromContext();
 	let alertDialogOpen = $state(false);
-	const context = useSidebar();
-	const groupedChats = $derived(groupChatsByDate(history));
+	const groupedChats = $derived(groupChatsByDate(chatHistory.chats));
+	let chatIdToDelete = $state<string | undefined>(undefined);
 
 	type GroupedChats = {
 		today: Chat[];
@@ -70,6 +71,37 @@
 			} as GroupedChats
 		);
 	}
+
+	async function handleDeleteChat() {
+		const deletePromise = (async () => {
+			const res = await fetch('/api/chat', {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ id: chatIdToDelete })
+			});
+			if (!res.ok) {
+				throw new Error();
+			}
+		})();
+
+		toast.promise(deletePromise, {
+			loading: 'Deleting chat...',
+			success: () => {
+				chatHistory.chats = chatHistory.chats.filter((chat) => chat.id !== chatIdToDelete);
+				chatHistory.refetch();
+				return 'Chat deleted successfully';
+			},
+			error: 'Failed to delete chat'
+		});
+
+		alertDialogOpen = false;
+
+		if (chatIdToDelete === page.params.chatId) {
+			await goto('/');
+		}
+	}
 </script>
 
 {#if !user}
@@ -82,23 +114,7 @@
 			</div>
 		</SidebarGroupContent>
 	</SidebarGroup>
-{:else if loading}
-	<SidebarGroup>
-		<div class="px-2 py-1 text-xs text-sidebar-foreground/50">Today</div>
-		<SidebarGroupContent>
-			<div class="flex flex-col">
-				{#each [44, 32, 28, 64, 52] as item (item)}
-					<div class="flex h-8 items-center gap-2 rounded-md px-2">
-						<div
-							class="h-4 max-w-[--skeleton-width] flex-1 rounded-md bg-sidebar-accent-foreground/10"
-							style="--skeleton-width': {item}%"
-						></div>
-					</div>
-				{/each}
-			</div>
-		</SidebarGroupContent>
-	</SidebarGroup>
-{:else if history.length === 0}
+{:else if chatHistory.chats.length === 0}
 	<SidebarGroup>
 		<SidebarGroupContent>
 			<div
@@ -120,11 +136,9 @@
 						{#each chats as chat (chat.id)}
 							<ChatItem
 								{chat}
-								isActive={chat.id === page.params.chatId}
+								active={chat.id === page.params.chatId}
 								ondelete={(chatId) => {
-									// TODO
-									// setDeleteId(chatId);
-									// setShowDeleteDialog(true);
+									chatIdToDelete = chatId;
 									alertDialogOpen = true;
 								}}
 							/>
@@ -145,8 +159,7 @@
 			</AlertDialogHeader>
 			<AlertDialogFooter>
 				<AlertDialogCancel>Cancel</AlertDialogCancel>
-				<!-- TODO -->
-				<AlertDialogAction onclick={() => console.log('deleted')}>Continue</AlertDialogAction>
+				<AlertDialogAction onclick={handleDeleteChat}>Continue</AlertDialogAction>
 			</AlertDialogFooter>
 		</AlertDialogContent>
 	</AlertDialog>

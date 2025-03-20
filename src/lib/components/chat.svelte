@@ -1,71 +1,59 @@
 <script lang="ts">
 	import { Chat } from '@ai-sdk/svelte';
-	import type { Message } from 'ai';
+	import type { Attachment, Message } from 'ai';
 	import { toast } from 'svelte-sonner';
 	import { ChatHistory } from '$lib/hooks/chat-history.svelte';
 	import ChatHeader from './chat-header.svelte';
 	import type { Chat as DbChat } from '$lib/server/db/schema';
+	import Messages from './messages.svelte';
+	import MultimodalInput from './multimodal-input.svelte';
+	import { invalidate } from '$app/navigation';
 
 	let {
 		chat,
-		isReadonly,
+		readonly,
 		initialMessages
 	}: {
 		chat: DbChat | undefined;
-		isReadonly: boolean;
+		readonly: boolean;
 		initialMessages: Message[];
 	} = $props();
+
+	const chatHistory = ChatHistory.fromContext();
 
 	const chatClient = $derived(
 		new Chat({
 			id: chat?.id,
 			initialMessages,
-			get body() {
-				return { id: chat?.id };
-			},
 			sendExtraMessageFields: true,
 			generateId: crypto.randomUUID.bind(crypto),
-			onFinish: () => {
-				ChatHistory.invalidate();
+			onFinish: async () => {
+				await chatHistory.refetch();
 			},
 			onError: (error) => {
 				toast.error(error.message);
 			}
 		})
 	);
+
+	let attachments = $state<Attachment[]>([]);
+
+	$inspect(chatClient.messages);
 </script>
 
 <div class="flex h-dvh min-w-0 flex-col bg-background">
-	<ChatHeader {chat} {isReadonly} />
-	<!-- TODO -->
-	<!-- <Messages
-		chatId={id}
-		{isLoading}
-		{votes}
-		{messages}
-		{setMessages}
-		{reload}
-		{isReadonly}
-		{isArtifactVisible}
+	<ChatHeader {chat} {readonly} />
+	<Messages
+		{readonly}
+		loading={chatClient.status === 'streaming' || chatClient.status === 'submitted'}
+		messages={chatClient.messages}
 	/>
 
 	<form class="mx-auto flex w-full gap-2 bg-background px-4 pb-4 md:max-w-3xl md:pb-6">
-		{#if !isReadonly}
-			<MultimodalInput
-				chatId={id}
-				{input}
-				{setInput}
-				{handleSubmit}
-				{isLoading}
-				{stop}
-				{attachments}
-				{setAttachments}
-				{messages}
-				{setMessages}
-				{append}
-			/>
+		{#if !readonly}
+			<MultimodalInput {attachments} {chatClient} class="flex-1" />
 		{/if}
-	</form> -->
+	</form>
 </div>
 
 <!-- TODO -->
@@ -83,5 +71,5 @@
 	{setMessages}
 	{reload}
 	{votes}
-	{isReadonly}
+	{readonly}
 /> -->

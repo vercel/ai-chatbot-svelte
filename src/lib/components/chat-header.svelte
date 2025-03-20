@@ -13,10 +13,10 @@
 
 	let {
 		chat,
-		isReadonly
+		readonly
 	}: {
 		chat?: Chat;
-		isReadonly: boolean;
+		readonly: boolean;
 	} = $props();
 
 	const sidebar = useSidebar();
@@ -25,11 +25,12 @@
 <header class="sticky top-0 flex items-center gap-2 bg-background px-2 py-1.5 md:px-2">
 	<SidebarToggle />
 
-	{#if !sidebar.open || (innerWidth.current ?? 0) < 768}
+	{#if !sidebar.open || (innerWidth.current ?? 768) < 768}
 		<Tooltip>
 			<TooltipTrigger>
 				{#snippet child({ props })}
 					<Button
+						{...props}
 						variant="outline"
 						class="order-2 ml-auto px-2 md:order-1 md:ml-0 md:h-fit md:px-2"
 						onclick={() => {
@@ -37,7 +38,6 @@
 								invalidateAll: true
 							});
 						}}
-						{...props}
 					>
 						<PlusIcon />
 						<span class="md:sr-only">New Chat</span>
@@ -48,11 +48,11 @@
 		</Tooltip>
 	{/if}
 
-	{#if !isReadonly}
+	{#if !readonly}
 		<ModelSelector class="order-1 md:order-2" />
 	{/if}
 
-	{#if !isReadonly && chat}
+	{#if !readonly && chat}
 		<VisibilitySelector {chat} class="order-1 md:order-3" />
 	{/if}
 

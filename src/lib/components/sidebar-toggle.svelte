@@ -13,7 +13,6 @@
 			<Button
 				{...props}
 				onclick={() => {
-					console.log('toggling');
 					sidebar.toggle();
 					sidebar.open;
 				}}

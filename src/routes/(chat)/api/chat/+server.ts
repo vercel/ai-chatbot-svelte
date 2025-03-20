@@ -7,16 +7,17 @@ import { error } from '@sveltejs/kit';
 import { createDataStreamResponse, smoothStream, streamText, type Message } from 'ai';
 import { ok, safeTry } from 'neverthrow';
 
-export async function POST({ request, locals: { user } }) {
+export async function POST({ request, locals: { user }, cookies }) {
 	// TODO: zod?
-	const {
-		id,
-		messages,
-		selectedChatModel
-	}: { id: string; messages: Message[]; selectedChatModel: string } = await request.json();
+	const { id, messages }: { id: string; messages: Message[] } = await request.json();
+	const selectedChatModel = cookies.get('selected-model');
 
 	if (!user) {
 		error(401, 'Unauthorized');
+	}
+
+	if (!selectedChatModel) {
+		error(400, 'No chat model selected');
 	}
 
 	const userMessage = getMostRecentUserMessage(messages);
@@ -57,7 +58,7 @@ export async function POST({ request, locals: { user } }) {
 				// 	? []
 				// 	: ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions'],
 				experimental_transform: smoothStream({ chunking: 'word' }),
-				experimental_generateMessageId: crypto.randomUUID,
+				experimental_generateMessageId: crypto.randomUUID.bind(crypto),
 				// TODO
 				// tools: {
 				// 	getWeather,
@@ -96,8 +97,9 @@ export async function POST({ request, locals: { user } }) {
 				sendReasoning: true
 			});
 		},
-		onError: () => {
-			return 'Oops, an error occured!';
+		onError: (e) => {
+			console.error(e);
+			return 'Oops!';
 		}
 	});
 }

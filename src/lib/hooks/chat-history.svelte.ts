@@ -1,4 +1,3 @@
-import { invalidate } from '$app/navigation';
 import type { VisibilityType } from '$lib/components/visibility-selector.svelte';
 import type { Chat } from '$lib/server/db/schema';
 import { getContext, setContext } from 'svelte';
@@ -7,22 +6,19 @@ import { toast } from 'svelte-sonner';
 const contextKey = Symbol('ChatHistory');
 
 export class ChatHistory {
-	#chats = $state<Chat[]>([]);
-
-	get chats() {
-		return this.#chats;
-	}
+	chats = $state<Chat[]>([]);
 
 	constructor(chats: Chat[]) {
-		this.#chats = chats;
+		this.chats = chats;
 	}
 
 	getChatDetails = (chatId: string) => {
-		return this.#chats.find((c) => c.id === chatId);
+		return this.chats.find((c) => c.id === chatId);
 	};
 
 	updateVisibility = async (chatId: string, visibility: VisibilityType) => {
-		const chat = this.#chats.find((c) => c.id === chatId);
+		console.log('calling');
+		const chat = this.chats.find((c) => c.id === chatId);
 		if (chat) {
 			chat.visibility = visibility;
 		}
@@ -36,7 +32,7 @@ export class ChatHistory {
 		if (!res.ok) {
 			toast.error('Failed update chat visibility');
 			// try reloading data from source in case another competing mutation caused an issue
-			await ChatHistory.invalidate();
+			await this.refetch();
 		}
 	};
 
@@ -44,11 +40,14 @@ export class ChatHistory {
 		setContext(contextKey, this);
 	}
 
-	static fromContext(): ChatHistory {
-		return getContext(contextKey);
+	async refetch() {
+		const res = await fetch('/api/history');
+		if (res.ok) {
+			this.chats = await res.json();
+		}
 	}
 
-	static invalidate() {
-		return invalidate('/api/history');
+	static fromContext(): ChatHistory {
+		return getContext(contextKey);
 	}
 }

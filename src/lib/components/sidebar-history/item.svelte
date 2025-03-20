@@ -20,11 +20,11 @@
 
 	let {
 		chat,
-		isActive,
+		active,
 		ondelete
 	}: {
 		chat: Chat;
-		isActive: boolean;
+		active: boolean;
 		ondelete: (chatId: string) => void;
 	} = $props();
 
@@ -38,7 +38,7 @@
 </script>
 
 <SidebarMenuItem>
-	<SidebarMenuButton {isActive}>
+	<SidebarMenuButton isActive={active}>
 		{#snippet child({ props })}
 			<button
 				{...props}
@@ -58,7 +58,7 @@
 				<SidebarMenuAction
 					{...props}
 					class="mr-0.5 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-					showOnHover={!isActive}
+					showOnHover={!active}
 				>
 					<MoreHorizontalIcon />
 					<span class="sr-only">More</span>
@@ -108,7 +108,7 @@
 
 			<DropdownMenuItem
 				class="cursor-pointer text-destructive focus:bg-destructive/15 focus:text-destructive dark:text-red-500"
-				onselect={() => ondelete(chat.id)}
+				onclick={() => ondelete(chat.id)}
 			>
 				<TrashIcon />
 				<span>Delete</span>

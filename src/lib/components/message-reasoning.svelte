@@ -30,6 +30,5 @@
 		</div>
 	{/if}
 
-	<!-- TODO there was an animation here -->
 	<Markdown md={reasoning} />
 </div>

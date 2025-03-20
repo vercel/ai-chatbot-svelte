@@ -45,7 +45,7 @@
 								class="h-fit p-2"
 								onclick={() => {
 									context.setOpenMobile(false);
-									goto('/');
+									goto('/', { invalidateAll: true });
 								}}
 							>
 								<PlusIcon />

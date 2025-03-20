@@ -17,6 +17,7 @@
 	import ShareIcon from '../icons/share.svelte';
 	import MoreHorizontalIcon from '../icons/more-horizontal.svelte';
 	import { goto } from '$app/navigation';
+	import { ChatHistory } from '$lib/hooks/chat-history.svelte';
 
 	let {
 		chat,
@@ -30,11 +31,8 @@
 
 	const context = useSidebar();
 
-	// TODO: actually make this do something
-	let visibilityType: 'private' | 'public' = $state('private');
-	const setVisibilityType = (type: 'private' | 'public') => {
-		visibilityType = type;
-	};
+	const chatHistory = ChatHistory.fromContext();
+	const chatFromHistory = $derived(chatHistory.getChatDetails(chat.id));
 </script>
 
 <SidebarMenuItem>
@@ -72,38 +70,36 @@
 					<ShareIcon />
 					<span>Share</span>
 				</DropdownMenuSubTrigger>
-				<DropdownMenu>
-					<DropdownMenuSubContent>
-						<DropdownMenuItem
-							class="cursor-pointer flex-row justify-between"
-							onclick={() => {
-								setVisibilityType('private');
-							}}
-						>
-							<div class="flex flex-row items-center gap-2">
-								<LockIcon size={12} />
-								<span>Private</span>
-							</div>
-							{#if visibilityType === 'private'}
-								<CheckCircleFillIcon />
-							{/if}
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							class="cursor-pointer flex-row justify-between"
-							onclick={() => {
-								setVisibilityType('public');
-							}}
-						>
-							<div class="flex flex-row items-center gap-2">
-								<GlobeIcon />
-								<span>Public</span>
-							</div>
-							{#if visibilityType === 'public'}
-								<CheckCircleFillIcon />
-							{/if}
-						</DropdownMenuItem>
-					</DropdownMenuSubContent>
-				</DropdownMenu>
+				<DropdownMenuSubContent align="start">
+					<DropdownMenuItem
+						class="cursor-pointer flex-row justify-between"
+						onclick={() => {
+							chatHistory.updateVisibility(chat.id, 'private');
+						}}
+					>
+						<div class="flex flex-row items-center gap-2">
+							<LockIcon size={12} />
+							<span>Private</span>
+						</div>
+						{#if chatFromHistory?.visibility === 'private'}
+							<CheckCircleFillIcon />
+						{/if}
+					</DropdownMenuItem>
+					<DropdownMenuItem
+						class="cursor-pointer flex-row justify-between"
+						onclick={() => {
+							chatHistory.updateVisibility(chat.id, 'public');
+						}}
+					>
+						<div class="flex flex-row items-center gap-2">
+							<GlobeIcon />
+							<span>Public</span>
+						</div>
+						{#if chatFromHistory?.visibility === 'public'}
+							<CheckCircleFillIcon />
+						{/if}
+					</DropdownMenuItem>
+				</DropdownMenuSubContent>
 			</DropdownMenuSub>
 
 			<DropdownMenuItem

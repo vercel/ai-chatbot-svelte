@@ -17,7 +17,6 @@ export class ChatHistory {
 	};
 
 	updateVisibility = async (chatId: string, visibility: VisibilityType) => {
-		console.log('calling');
 		const chat = this.chats.find((c) => c.id === chatId);
 		if (chat) {
 			chat.visibility = visibility;

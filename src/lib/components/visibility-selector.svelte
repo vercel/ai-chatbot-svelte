@@ -39,7 +39,11 @@
 	] as const;
 
 	const chatHistory = ChatHistory.fromContext();
-	const { label, Icon } = $derived(visibilities.find((v) => v.id === chat.visibility)!);
+	const chatFromHistory = $derived(chatHistory.getChatDetails(chat.id));
+	const { label, Icon } = $derived(
+		(chatFromHistory && visibilities.find((v) => v.id === chatFromHistory.visibility)) ??
+			visibilities[0]
+	);
 </script>
 
 <DropdownMenu {open} onOpenChange={(val) => (open = val)}>
@@ -68,7 +72,7 @@
 					open = false;
 				}}
 				class="group/item flex flex-row items-center justify-between gap-4"
-				data-active={visibility.id === chat.visibility}
+				data-active={visibility.id === chatFromHistory?.visibility}
 			>
 				<div class="flex flex-col items-start gap-1">
 					{visibility.label}

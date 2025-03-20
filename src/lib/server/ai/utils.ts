@@ -1,5 +1,4 @@
 import { generateText, type Message } from 'ai';
-// import { VisibilityType } from '@/components/visibility-selector'; TODO
 import { myProvider } from './models';
 import { AIInternalError, type AIError } from '$lib/errors/ai';
 import { fromPromise, ok, safeTry, type ResultAsync } from 'neverthrow';
@@ -26,14 +25,3 @@ export function generateTitleFromUserMessage({
 		return ok(result.text);
 	});
 }
-
-// TODO
-// export async function updateChatVisibility({
-// 	chatId,
-// 	visibility
-// }: {
-// 	chatId: string;
-// 	visibility: VisibilityType;
-// }) {
-// 	await updateChatVisiblityById({ chatId, visibility });
-// }

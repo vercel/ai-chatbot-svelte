@@ -13,10 +13,9 @@
 		</p>
 		<p>
 			This is an
-			<!-- TODO -->
 			<a
 				class="font-medium underline underline-offset-4"
-				href="https://github.com/vercel/ai-chatbot"
+				href="https://github.com/vercel/ai-chatbot-svelte"
 				target="_blank"
 			>
 				open source
@@ -35,6 +34,16 @@
 				target="_blank"
 			>
 				docs
+			</a>
+			.
+		</p>
+		<p>
+			This template is also available for <a
+				class="font-medium underline underline-offset-4"
+				href="https://github.com/vercel/ai-chatbot-svelte"
+				target="_blank"
+			>
+				Next.js
 			</a>
 			.
 		</p>

@@ -36,8 +36,6 @@
 	);
 
 	let attachments = $state<Attachment[]>([]);
-
-	$inspect(chatClient.messages);
 </script>
 
 <div class="flex h-dvh min-w-0 flex-col bg-background">

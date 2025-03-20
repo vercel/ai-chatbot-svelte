@@ -4,18 +4,21 @@
 	import { toast } from 'svelte-sonner';
 	import { ChatHistory } from '$lib/hooks/chat-history.svelte';
 	import ChatHeader from './chat-header.svelte';
-	import type { Chat as DbChat } from '$lib/server/db/schema';
+	import type { Chat as DbChat, User } from '$lib/server/db/schema';
 	import Messages from './messages.svelte';
 	import MultimodalInput from './multimodal-input.svelte';
+	import { untrack } from 'svelte';
 
 	let {
+		user,
 		chat,
 		readonly,
 		initialMessages
 	}: {
+		user: User | undefined;
 		chat: DbChat | undefined;
-		readonly: boolean;
 		initialMessages: Message[];
+		readonly: boolean;
 	} = $props();
 
 	const chatHistory = ChatHistory.fromContext();
@@ -23,7 +26,9 @@
 	const chatClient = $derived(
 		new Chat({
 			id: chat?.id,
-			initialMessages,
+			// This way, the client is only recreated when the ID changes, allowing us to fully manage messages
+			// clientside while still SSRing them on initial load or when we navigate to a different chat.
+			initialMessages: untrack(() => initialMessages),
 			sendExtraMessageFields: true,
 			generateId: crypto.randomUUID.bind(crypto),
 			onFinish: async () => {
@@ -39,7 +44,7 @@
 </script>
 
 <div class="flex h-dvh min-w-0 flex-col bg-background">
-	<ChatHeader {chat} {readonly} />
+	<ChatHeader {user} {chat} {readonly} />
 	<Messages
 		{readonly}
 		loading={chatClient.status === 'streaming' || chatClient.status === 'submitted'}
@@ -48,7 +53,7 @@
 
 	<form class="mx-auto flex w-full gap-2 bg-background px-4 pb-4 md:max-w-3xl md:pb-6">
 		{#if !readonly}
-			<MultimodalInput {attachments} {chatClient} class="flex-1" />
+			<MultimodalInput {attachments} {user} {chatClient} class="flex-1" />
 		{/if}
 	</form>
 </div>

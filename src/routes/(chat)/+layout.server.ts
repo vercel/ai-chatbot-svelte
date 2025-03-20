@@ -1,7 +1,7 @@
 import { DEFAULT_CHAT_MODEL } from '$lib/ai/models';
 import { SelectedModel } from '$lib/hooks/selected-model.svelte.js';
 
-export function load({ cookies, locals }) {
+export async function load({ cookies, locals }) {
 	const { user } = locals;
 	const sidebarCollapsed = cookies.get('sidebar:state') !== 'true';
 

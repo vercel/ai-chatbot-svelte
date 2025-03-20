@@ -19,7 +19,7 @@
 <div
 	class="group/message mx-auto w-full max-w-3xl px-4"
 	data-role={message.role}
-	in:fly={{ opacity: 0, y: 5 }}
+	in:fly|global={{ opacity: 0, y: 5 }}
 >
 	<div
 		class={cn(

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { UIMessage } from '@ai-sdk/svelte';
 	import ThinkingMessage from './messages/thinking-message.svelte';
 	import Overview from './messages/overview.svelte';
 	import { onMount } from 'svelte';
 	import PreviewMessage from './messages/preview-message.svelte';
+	import type { UIMessage } from '@ai-sdk/svelte';
 
 	let containerRef = $state<HTMLDivElement | null>(null);
 	let endRef = $state<HTMLDivElement | null>(null);

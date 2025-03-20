@@ -2,7 +2,9 @@ import { myProvider } from '$lib/server/ai/models';
 import { systemPrompt } from '$lib/server/ai/prompts.js';
 import { generateTitleFromUserMessage } from '$lib/server/ai/utils';
 import { deleteChatById, getChatById, saveChat, saveMessages } from '$lib/server/db/queries.js';
+import type { Chat } from '$lib/server/db/schema';
 import { getMostRecentUserMessage, sanitizeResponseMessages } from '$lib/utils/chat.js';
+import { allowAnonymousChats } from '$lib/utils/constants.js';
 import { error } from '@sveltejs/kit';
 import { createDataStreamResponse, smoothStream, streamText, type Message } from 'ai';
 import { ok, safeTry } from 'neverthrow';
@@ -12,7 +14,7 @@ export async function POST({ request, locals: { user }, cookies }) {
 	const { id, messages }: { id: string; messages: Message[] } = await request.json();
 	const selectedChatModel = cookies.get('selected-model');
 
-	if (!user) {
+	if (!user && !allowAnonymousChats) {
 		error(401, 'Unauthorized');
 	}
 
@@ -26,24 +28,31 @@ export async function POST({ request, locals: { user }, cookies }) {
 		error(400, 'No user message found');
 	}
 
-	await safeTry(async function* () {
-		const chat = await getChatById({ id });
-		if (chat.isErr()) {
-			if (chat.error._tag === 'DbEntityNotFoundError') {
+	if (user) {
+		await safeTry(async function* () {
+			let chat: Chat;
+			const chatResult = await getChatById({ id });
+			if (chatResult.isErr()) {
+				if (chatResult.error._tag !== 'DbEntityNotFoundError') {
+					return chatResult;
+				}
 				const title = yield* generateTitleFromUserMessage({ message: userMessage });
-				return saveChat({ id, userId: user.id, title });
+				chat = yield* saveChat({ id, userId: user.id, title });
+			} else {
+				chat = chatResult.value;
 			}
-			return chat;
-		}
-		if (chat.value.userId !== user.id) {
-			error(403, 'Forbidden');
-		}
-		return ok(undefined);
-	}).orElse(() => error(500, 'An error occurred while processing your request'));
 
-	await saveMessages({
-		messages: [{ ...userMessage, createdAt: new Date(), chatId: id }]
-	}).orElse(() => error(500, 'An error occurred while processing your request'));
+			if (chat.userId !== user.id) {
+				error(403, 'Forbidden');
+			}
+
+			yield* saveMessages({
+				messages: [{ ...userMessage, createdAt: new Date(), chatId: id }]
+			});
+
+			return ok(undefined);
+		}).orElse(() => error(500, 'An error occurred while processing your request'));
+	}
 
 	return createDataStreamResponse({
 		execute: (dataStream) => {
@@ -70,6 +79,7 @@ export async function POST({ request, locals: { user }, cookies }) {
 				// 	})
 				// },
 				onFinish: async ({ response, reasoning }) => {
+					if (!user) return;
 					const sanitizedResponseMessages = sanitizeResponseMessages({
 						messages: response.messages,
 						reasoning

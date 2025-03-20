@@ -13,7 +13,7 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"db:generate": "drizzle-kit generate",
-		"db:migrate": "npx tsx src/lib/server/db/migrate.ts",
+		"db:migrate": "npx --yes tsx src/lib/server/db/migrate.ts",
 		"db:studio": "drizzle-kit studio",
 		"db:push": "drizzle-kit push",
 		"db:pull": "drizzle-kit pull",

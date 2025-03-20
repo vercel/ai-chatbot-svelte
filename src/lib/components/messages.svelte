@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Message } from 'ai';
+	import type { UIMessage } from '@ai-sdk/svelte';
 	import ThinkingMessage from './messages/thinking-message.svelte';
 	import Overview from './messages/overview.svelte';
 	import { onMount } from 'svelte';
@@ -15,7 +15,7 @@
 	}: {
 		readonly: boolean;
 		loading: boolean;
-		messages: Message[];
+		messages: UIMessage[];
 	} = $props();
 
 	let mounted = $state(false);

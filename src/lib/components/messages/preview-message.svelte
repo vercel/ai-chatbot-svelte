@@ -41,7 +41,7 @@
 		{/if}
 
 		<div class="flex w-full flex-col gap-4">
-			{#if message.experimental_attachments}
+			{#if message.experimental_attachments && message.experimental_attachments.length > 0}
 				<div class="flex flex-row justify-end gap-2">
 					{#each message.experimental_attachments as attachment (attachment.url)}
 						<PreviewAttachment {attachment} />
@@ -80,7 +80,7 @@
 									'rounded-xl bg-primary px-3 py-2 text-primary-foreground': message.role === 'user'
 								})}
 							>
-								<Markdown md={message.content} />
+								<Markdown md={part.text} />
 							</div>
 						</div>
 					{:else if mode === 'edit'}

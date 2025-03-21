@@ -10,7 +10,6 @@
 	import { toast } from 'svelte-sonner';
 	import { Button } from './ui/button';
 	import PaperclipIcon from './icons/paperclip.svelte';
-	import { sanitizeUIMessages } from '$lib/utils/chat';
 	import StopIcon from './icons/stop.svelte';
 	import ArrowUpIcon from './icons/arrow-up.svelte';
 	import SuggestedActions from './suggested-actions.svelte';
@@ -222,7 +221,7 @@
 		onclick={(event) => {
 			event.preventDefault();
 			stop();
-			chatClient.messages = sanitizeUIMessages(chatClient.messages);
+			chatClient.messages = chatClient.messages;
 		}}
 	>
 		<StopIcon size={14} />

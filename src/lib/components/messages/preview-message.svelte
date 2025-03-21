@@ -49,89 +49,89 @@
 				</div>
 			{/if}
 
-			{#if message.reasoning}
-				<MessageReasoning {loading} reasoning={message.reasoning} />
-			{/if}
-
-			{#if (message.content || message.reasoning) && mode === 'view'}
-				<div class="flex flex-row items-start gap-2">
-					{#if message.role === 'user' && !readonly}
-						<Tooltip>
-							<TooltipTrigger>
-								{#snippet child({ props })}
-									<Button
-										{...props}
-										variant="ghost"
-										class="h-fit rounded-full px-2 text-muted-foreground opacity-0 group-hover/message:opacity-100"
-										onclick={() => {
-											mode = 'edit';
-										}}
-									>
-										<PencilEditIcon />
-									</Button>
-								{/snippet}
-							</TooltipTrigger>
-							<TooltipContent>Edit message</TooltipContent>
-						</Tooltip>
-					{/if}
-					<div
-						class={cn('flex flex-col gap-4', {
-							'rounded-xl bg-primary px-3 py-2 text-primary-foreground': message.role === 'user'
-						})}
-					>
-						<Markdown md={message.content} />
-					</div>
-				</div>
-			{/if}
-			{#if message.content && mode === 'edit'}
-				<div class="flex flex-row items-start gap-2">
-					<div class="size-8"></div>
-
-					<!-- TODO -->
-					<!-- <MessageEditor key={message.id} {message} {setMode} {setMessages} {reload} /> -->
-				</div>
-			{/if}
-
-			<!-- TODO -->
-			<!-- {#if message.toolInvocations && message.toolInvocations.length > 0}
-				<div class="flex flex-col gap-4">
-					{#each message.toolInvocations as toolInvocation (toolInvocation.toolCallId)}
-						{@const { toolName, toolCallId, state, args } = toolInvocation}
-						{#if state === 'result'}
-							{@const { result } = toolInvocation}
-							<div>
-								{#if toolName === 'getWeather'}
-									<Weather weatherAtLocation={result} />
-								{:else if toolName === 'createDocument'}
-									<DocumentPreview {readonly} {result} />
-								{:else if toolName === 'updateDocument'}
-									<DocumentToolResult type="update" {result} {readonly} />
-								{:else if toolName === 'requestSuggestions'}
-									<DocumentToolResult type="request-suggestions" {result} {readonly} />
-								{:else}
-									<pre>{JSON.stringify(result, null, 2)}</pre>
-								{/if}
-							</div>
-						{:else}
+			{#each message.parts as part, i (`${message.id}-${i}`)}
+				{@const { type } = part}
+				{#if type === 'reasoning'}
+					<MessageReasoning {loading} reasoning={part.reasoning} />
+				{:else if type === 'text'}
+					{#if mode === 'view'}
+						<div class="flex flex-row items-start gap-2">
+							{#if message.role === 'user' && !readonly}
+								<Tooltip>
+									<TooltipTrigger>
+										{#snippet child({ props })}
+											<Button
+												{...props}
+												variant="ghost"
+												class="h-fit rounded-full px-2 text-muted-foreground opacity-0 group-hover/message:opacity-100"
+												onclick={() => {
+													mode = 'edit';
+												}}
+											>
+												<PencilEditIcon />
+											</Button>
+										{/snippet}
+									</TooltipTrigger>
+									<TooltipContent>Edit message</TooltipContent>
+								</Tooltip>
+							{/if}
 							<div
-								class={cn({
-									skeleton: ['getWeather'].includes(toolName)
+								class={cn('flex flex-col gap-4', {
+									'rounded-xl bg-primary px-3 py-2 text-primary-foreground': message.role === 'user'
 								})}
 							>
-								{#if toolName === 'getWeather'}
-									<Weather />
-								{:else if toolName === 'createDocument'}
-									<DocumentPreview {readonly} {args} />
-								{:else if toolName === 'updateDocument'}
-									<DocumentToolCall type="update" {args} {readonly} />
-								{:else if toolName === 'requestSuggestions'}
-									<DocumentToolCall type="request-suggestions" {args} {readonly} />
-								{/if}
+								<Markdown md={message.content} />
 							</div>
-						{/if}
-					{/each}
-				</div>
-			{/if} -->
+						</div>
+					{:else if mode === 'edit'}
+						<div class="flex flex-row items-start gap-2">
+							<div class="size-8"></div>
+
+							<!-- TODO -->
+							<!-- <MessageEditor key={message.id} {message} {setMode} {setMessages} {reload} /> -->
+						</div>
+					{/if}
+
+					<!-- TODO -->
+					<!-- {:else if type === 'tool-invocation'}
+					{@const { toolInvocation } = part}
+					{@const { toolName, state } = toolInvocation}
+
+					{#if state === 'call'}
+						{@const { args } = toolInvocation}
+						<div
+							class={cn({
+								skeleton: ['getWeather'].includes(toolName)
+							})}
+						>
+							{#if toolName === 'getWeather'}
+								<Weather />
+							{:else if toolName === 'createDocument'}
+								<DocumentPreview {readonly} {args} />
+							{:else if toolName === 'updateDocument'}
+								<DocumentToolCall type="update" {args} {readonly} />
+							{:else if toolName === 'requestSuggestions'}
+								<DocumentToolCall type="request-suggestions" {args} {readonly} />
+							{/if}
+						</div>
+					{:else if state === 'result'}
+					{@const { result } = toolInvocation}
+						<div>
+							{#if toolName === 'getWeather'}
+								<Weather weatherAtLocation={result} />
+							{:else if toolName === 'createDocument'}
+								<DocumentPreview {readonly} {result} />
+							{:else if toolName === 'updateDocument'}
+								<DocumentToolResult type="update" {result} {readonly} />
+							{:else if toolName === 'requestSuggestions'}
+								<DocumentToolResult type="request-suggestions" {result} {readonly} />
+							{:else}
+								<pre>{JSON.stringify(result, null, 2)}</pre>
+							{/if}
+						</div>
+					{/if} -->
+				{/if}
+			{/each}
 
 			<!-- TODO -->
 			<!-- {#if !readonly}

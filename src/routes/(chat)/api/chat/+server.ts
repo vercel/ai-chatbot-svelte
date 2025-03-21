@@ -3,15 +3,21 @@ import { systemPrompt } from '$lib/server/ai/prompts.js';
 import { generateTitleFromUserMessage } from '$lib/server/ai/utils';
 import { deleteChatById, getChatById, saveChat, saveMessages } from '$lib/server/db/queries.js';
 import type { Chat } from '$lib/server/db/schema';
-import { getMostRecentUserMessage, sanitizeResponseMessages } from '$lib/utils/chat.js';
+import { getMostRecentUserMessage, getTrailingMessageId } from '$lib/utils/chat.js';
 import { allowAnonymousChats } from '$lib/utils/constants.js';
 import { error } from '@sveltejs/kit';
-import { createDataStreamResponse, smoothStream, streamText, type Message } from 'ai';
+import {
+	appendResponseMessages,
+	createDataStreamResponse,
+	smoothStream,
+	streamText,
+	type UIMessage
+} from 'ai';
 import { ok, safeTry } from 'neverthrow';
 
 export async function POST({ request, locals: { user }, cookies }) {
 	// TODO: zod?
-	const { id, messages }: { id: string; messages: Message[] } = await request.json();
+	const { id, messages }: { id: string; messages: UIMessage[] } = await request.json();
 	const selectedChatModel = cookies.get('selected-model');
 
 	if (!user && !allowAnonymousChats) {
@@ -47,7 +53,16 @@ export async function POST({ request, locals: { user }, cookies }) {
 			}
 
 			yield* saveMessages({
-				messages: [{ ...userMessage, createdAt: new Date(), chatId: id }]
+				messages: [
+					{
+						chatId: id,
+						id: userMessage.id,
+						role: 'user',
+						parts: userMessage.parts,
+						attachments: userMessage.experimental_attachments ?? [],
+						createdAt: new Date()
+					}
+				]
 			});
 
 			return ok(undefined);
@@ -78,23 +93,32 @@ export async function POST({ request, locals: { user }, cookies }) {
 				// 		dataStream
 				// 	})
 				// },
-				onFinish: async ({ response, reasoning }) => {
+				onFinish: async ({ response }) => {
 					if (!user) return;
-					const sanitizedResponseMessages = sanitizeResponseMessages({
-						messages: response.messages,
-						reasoning
+					const assistantId = getTrailingMessageId({
+						messages: response.messages.filter((message) => message.role === 'assistant')
+					});
+
+					if (!assistantId) {
+						throw new Error('No assistant message found!');
+					}
+
+					const [, assistantMessage] = appendResponseMessages({
+						messages: [userMessage],
+						responseMessages: response.messages
 					});
 
 					await saveMessages({
-						messages: sanitizedResponseMessages.map((message) => {
-							return {
-								id: message.id,
+						messages: [
+							{
+								id: assistantId,
 								chatId: id,
-								role: message.role,
-								content: message.content,
+								role: assistantMessage.role,
+								parts: assistantMessage.parts,
+								attachments: assistantMessage.experimental_attachments ?? [],
 								createdAt: new Date()
-							};
-						})
+							}
+						]
 					});
 				},
 				experimental_telemetry: {

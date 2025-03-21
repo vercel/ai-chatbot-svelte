@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Chat } from '@ai-sdk/svelte';
-	import type { Attachment, Message } from 'ai';
+	import type { Attachment } from 'ai';
 	import { toast } from 'svelte-sonner';
 	import { ChatHistory } from '$lib/hooks/chat-history.svelte';
 	import ChatHeader from './chat-header.svelte';
@@ -8,6 +8,7 @@
 	import Messages from './messages.svelte';
 	import MultimodalInput from './multimodal-input.svelte';
 	import { untrack } from 'svelte';
+	import type { UIMessage } from '@ai-sdk/svelte';
 
 	let {
 		user,
@@ -17,7 +18,7 @@
 	}: {
 		user: User | undefined;
 		chat: DbChat | undefined;
-		initialMessages: Message[];
+		initialMessages: UIMessage[];
 		readonly: boolean;
 	} = $props();
 

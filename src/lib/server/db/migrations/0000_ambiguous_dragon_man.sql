@@ -19,7 +19,8 @@ CREATE TABLE "Message" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"chatId" uuid NOT NULL,
 	"role" varchar NOT NULL,
-	"content" json NOT NULL,
+	"parts" json NOT NULL,
+	"attachments" json NOT NULL,
 	"createdAt" timestamp NOT NULL
 );
 --> statement-breakpoint

@@ -48,12 +48,13 @@ export const chat = pgTable('Chat', {
 export type Chat = InferSelectModel<typeof chat>;
 
 export const message = pgTable('Message', {
-	id: uuid('id').primaryKey().notNull().defaultRandom().primaryKey(),
+	id: uuid('id').primaryKey().notNull().defaultRandom(),
 	chatId: uuid('chatId')
 		.notNull()
 		.references(() => chat.id),
 	role: varchar('role').notNull(),
-	content: json('content').notNull(),
+	parts: json('parts').notNull(),
+	attachments: json('attachments').notNull(),
 	createdAt: timestamp('createdAt').notNull()
 });
 

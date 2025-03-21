@@ -35,7 +35,23 @@
 				await chatHistory.refetch();
 			},
 			onError: (error) => {
-				toast.error(error.message);
+				try {
+					// If there's an API error, its message will be JSON-formatted
+					const jsonError = JSON.parse(error.message);
+					console.log(jsonError);
+					if (
+						typeof jsonError === 'object' &&
+						jsonError !== null &&
+						'message' in jsonError &&
+						typeof jsonError.message === 'string'
+					) {
+						toast.error(jsonError.message);
+					} else {
+						toast.error(error.message);
+					}
+				} catch {
+					toast.error(error.message);
+				}
 			}
 		})
 	);

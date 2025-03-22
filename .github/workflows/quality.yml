@@ -44,6 +44,7 @@ jobs:
       - run: pnpm check
         env:
           POSTGRES_URL: ''
-          OPENAI_API_KEY: ''
-          FIREWORKS_API_KEY: ''
+          FAL_API_KEY: ''
+          XAI_API_KEY: ''
+          GROQ_API_KEY: ''
           BLOB_READ_WRITE_TOKEN: ''

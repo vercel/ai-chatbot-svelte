@@ -8,9 +8,6 @@ importers:
 
   .:
     devDependencies:
-      '@ai-sdk/fal':
-        specifier: ^0.1.0
-        version: 0.1.0(zod@3.24.2)
       '@ai-sdk/groq':
         specifier: ^1.2.0
         version: 1.2.0(zod@3.24.2)
@@ -157,12 +154,6 @@ importers:
         version: 3.24.2
 
 packages:
-
-  '@ai-sdk/fal@0.1.0':
-    resolution: {integrity: sha512-dLC9yWV+Dj4kS0J+nSOUDOOLXwoYlhg+N5V4F2qriIFro/a/wIeadRWJE/wTLHwwsfI+H3Yz4AlczgrJWPcz2Q==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      zod: ^3.0.0
 
   '@ai-sdk/groq@1.2.0':
     resolution: {integrity: sha512-hF62hBUTpOMyqum+w9mozh/KIgxueKowM9cRo38n5PqpXYUexDEKcW8HxOAXWwmbAZcE4l+FBSTu/xk4lBZzZQ==}
@@ -2764,12 +2755,6 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
-
-  '@ai-sdk/fal@0.1.0(zod@3.24.2)':
-    dependencies:
-      '@ai-sdk/provider': 1.1.0
-      '@ai-sdk/provider-utils': 2.2.0(zod@3.24.2)
-      zod: 3.24.2
 
   '@ai-sdk/groq@1.2.0(zod@3.24.2)':
     dependencies:

@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import PreviewMessage from './messages/preview-message.svelte';
 	import type { UIMessage } from '@ai-sdk/svelte';
+	import { getLock } from '$lib/hooks/lock';
 
 	let containerRef = $state<HTMLDivElement | null>(null);
 	let endRef = $state<HTMLDivElement | null>(null);
@@ -23,11 +24,13 @@
 		mounted = true;
 	});
 
+	const scrollLock = getLock('messages-scroll');
+
 	$effect(() => {
 		if (!(containerRef && endRef)) return;
 
 		const observer = new MutationObserver(() => {
-			if (!endRef) return;
+			if (!endRef || scrollLock.locked) return;
 			endRef.scrollIntoView({ behavior: 'instant', block: 'end' });
 		});
 

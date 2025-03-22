@@ -21,9 +21,9 @@
 		"db:up": "drizzle-kit up"
 	},
 	"devDependencies": {
-		"@ai-sdk/fireworks": "^0.1.12",
-		"@ai-sdk/openai": "^1.1.14",
+		"@ai-sdk/groq": "^1.2.0",
 		"@ai-sdk/svelte": "^2.1.0",
+		"@ai-sdk/xai": "^1.2.1",
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
 		"@lucide/svelte": "^0.483.0",

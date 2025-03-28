@@ -59,7 +59,7 @@
 		"shadcn-svelte": "1.0.0-next.4",
 		"svelte": "^5.20.2",
 		"svelte-check": "^4.0.0",
-		"svelte-exmarkdown": "^4.0.3",
+		"svelte-exmarkdown": "^5.0.0",
 		"svelte-sonner": "^0.3.28",
 		"tailwind-merge": "^3.0.1",
 		"tailwind-variants": "^0.3.1",

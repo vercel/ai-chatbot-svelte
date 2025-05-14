@@ -8,10 +8,22 @@
 	import { Markdown } from '../markdown';
 	import MessageReasoning from '../message-reasoning.svelte';
 	import { fly } from 'svelte/transition';
-	import type { UIMessage } from '@ai-sdk/svelte';
+	import type { Chat, UIMessage } from '@ai-sdk/svelte';
+	import MessageEditor from '../message-editor.svelte';
 
-	let { message, readonly, loading }: { message: UIMessage; readonly: boolean; loading: boolean } =
-		$props();
+	let {
+		message,
+		readonly,
+		loading,
+		setMessages,
+		reload
+	}: {
+		message: UIMessage;
+		readonly: boolean;
+		loading: boolean;
+		setMessages: (fn: (prev: UIMessage[]) => UIMessage[]) => void;
+		reload: () => Promise<void>;
+	} = $props();
 
 	let mode = $state<'view' | 'edit'>('view');
 </script>
@@ -86,9 +98,7 @@
 					{:else if mode === 'edit'}
 						<div class="flex flex-row items-start gap-2">
 							<div class="size-8"></div>
-
-							<!-- TODO -->
-							<!-- <MessageEditor key={message.id} {message} {setMode} {setMessages} {reload} /> -->
+							<MessageEditor {message} setMode={(m) => (mode = m)} {setMessages} {reload} />
 						</div>
 					{/if}
 

@@ -12,11 +12,15 @@
 	let {
 		readonly,
 		loading,
-		messages
+		messages,
+		setMessages,
+		reload
 	}: {
 		readonly: boolean;
 		loading: boolean;
 		messages: UIMessage[];
+		setMessages: (fn: (prev: UIMessage[]) => UIMessage[]) => void;
+		reload: () => Promise<void>;
 	} = $props();
 
 	let mounted = $state(false);
@@ -51,7 +55,7 @@
 	{/if}
 
 	{#each messages as message (message.id)}
-		<PreviewMessage {message} {readonly} {loading} />
+		<PreviewMessage {message} {readonly} {loading} {setMessages} {reload} />
 	{/each}
 
 	{#if loading && messages.length > 0 && messages[messages.length - 1].role === 'user'}

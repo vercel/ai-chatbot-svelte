@@ -66,6 +66,8 @@
 		{readonly}
 		loading={chatClient.status === 'streaming' || chatClient.status === 'submitted'}
 		messages={chatClient.messages}
+		setMessages={(fn) => (chatClient.messages = fn(chatClient.messages))}
+		reload={() => chatClient.reload()}
 	/>
 
 	<form class="mx-auto flex w-full gap-2 bg-background px-4 pb-4 md:max-w-3xl md:pb-6">

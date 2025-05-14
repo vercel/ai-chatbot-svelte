@@ -203,7 +203,14 @@ export function saveMessages({
 }): ResultAsync<Message[], DbError> {
 	return safeTry(async function* () {
 		const insertResult = yield* fromPromise(
-			db.insert(message).values(messages).returning(),
+			db
+				.insert(message)
+				.values(messages)
+				.onConflictDoUpdate({
+					target: message.id,
+					set: { parts: 'excluded.parts', attachments: 'excluded.attachments' }
+				})
+				.returning(),
 			(e) => new DbInternalError({ cause: e })
 		);
 

@@ -4,7 +4,6 @@
 	import { Button } from './ui/button';
 	import { cn } from '$lib/utils/shadcn';
 	import type { UIMessage } from '@ai-sdk/svelte';
-	import type { TextUIPart } from '@ai-sdk/ui-utils';
 
 	let {
 		message,
@@ -37,7 +36,9 @@
 		isSubmitting = true;
 
 		const trimmed = draft.trim();
-		const original = (message.parts[textPartIndex] as TextUIPart).text.trim();
+		const original = (
+			message.parts[textPartIndex] as Extract<UIMessage['parts'][number], { type: 'text' }>
+		).text.trim();
 
 		if (trimmed === original) {
 			isSubmitting = false;

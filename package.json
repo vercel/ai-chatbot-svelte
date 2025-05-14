@@ -24,7 +24,6 @@
 		"@ai-sdk/groq": "^1.2.0",
 		"@ai-sdk/svelte": "^2.1.0",
 		"@ai-sdk/xai": "^1.2.1",
-		"@ai-sdk/ui-utils": "^1.2.11",
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
 		"@lucide/svelte": "^0.483.0",

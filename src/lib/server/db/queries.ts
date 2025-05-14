@@ -1,5 +1,5 @@
 import { genSaltSync, hashSync } from 'bcrypt-ts';
-import { and, asc, desc, eq, gt, gte, inArray } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, gte, inArray, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { POSTGRES_URL } from '$env/static/private';
@@ -208,7 +208,7 @@ export function saveMessages({
 				.values(messages)
 				.onConflictDoUpdate({
 					target: message.id,
-					set: { parts: 'excluded.parts', attachments: 'excluded.attachments' }
+					set: { parts: sql`excluded.parts`, attachments: sql`excluded.attachments` }
 				})
 				.returning(),
 			(e) => new DbInternalError({ cause: e })

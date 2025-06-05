@@ -1,16 +1,12 @@
 <script lang="ts">
-	import Markdown, { type ComponentsMap } from 'svelte-exmarkdown';
+	import Markdown from 'svelte-exmarkdown';
 	import { gfmPlugin } from 'svelte-exmarkdown/gfm';
-	import CodeBlock from '../code-block.svelte';
 	import { cn } from '$lib/utils/shadcn';
+	import CodeBlock from '../code-block.svelte';
 	let { md }: { md: string } = $props();
-
-	const renderer: ComponentsMap = {
-		code: CodeBlock,
-	};
 </script>
 
-<Markdown {md} plugins={[gfmPlugin(), { renderer }]}>
+<Markdown {md} plugins={[gfmPlugin()]}>
 	{#snippet ol(props)}
 		{@const { children, ...rest } = props}
 		<ol {...rest} class={cn('ml-4 list-outside list-decimal', rest.class)}>
@@ -36,7 +32,6 @@
 			{@render children?.()}
 		</span>
 	{/snippet}
-
 	{#snippet a(props)}
 		{@const { children, ...rest } = props}
 		<a
@@ -84,5 +79,8 @@
 		<h6 {...rest} class={cn('mb-2 mt-6 text-sm font-semibold', rest.class)}>
 			{@render children?.()}
 		</h6>
+	{/snippet}
+	{#snippet code(props)}
+		<CodeBlock {...props} class={props.class ?? undefined} />
 	{/snippet}
 </Markdown>

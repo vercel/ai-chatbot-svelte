@@ -24,7 +24,7 @@
 		<pre
 			{...rest}
 			class={`w-full overflow-x-auto rounded-xl border border-zinc-200 p-4 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50`}>
-          <code class="whitespace-pre-wrap break-words">{@render children?.()}</code>
+          <code class="break-words whitespace-pre-wrap">{@render children?.()}</code>
         </pre>
 	</div>
 {/if}

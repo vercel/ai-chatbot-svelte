@@ -9,7 +9,7 @@
 </script>
 
 <div
-	class="flex h-dvh w-screen items-start justify-center bg-background pt-12 md:items-center md:pt-0"
+	class="bg-background flex h-dvh w-screen items-start justify-center pt-12 md:items-center md:pt-0"
 >
 	<div class="flex w-full max-w-md flex-col gap-12 overflow-hidden rounded-2xl">
 		<div class="flex flex-col items-center justify-center gap-2 px-4 text-center sm:px-16">

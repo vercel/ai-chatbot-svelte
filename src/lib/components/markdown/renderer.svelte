@@ -46,37 +46,37 @@
 
 	{#snippet h1(props)}
 		{@const { children, ...rest } = props}
-		<h1 {...rest} class={cn('mb-2 mt-6 text-3xl font-semibold', rest.class)}>
+		<h1 {...rest} class={cn('mt-6 mb-2 text-3xl font-semibold', rest.class)}>
 			{@render children?.()}
 		</h1>
 	{/snippet}
 	{#snippet h2(props)}
 		{@const { children, ...rest } = props}
-		<h2 {...rest} class={cn('mb-2 mt-6 text-2xl font-semibold', rest.class)}>
+		<h2 {...rest} class={cn('mt-6 mb-2 text-2xl font-semibold', rest.class)}>
 			{@render children?.()}
 		</h2>
 	{/snippet}
 	{#snippet h3(props)}
 		{@const { children, ...rest } = props}
-		<h3 {...rest} class={cn('mb-2 mt-6 text-xl font-semibold', rest.class)}>
+		<h3 {...rest} class={cn('mt-6 mb-2 text-xl font-semibold', rest.class)}>
 			{@render children?.()}
 		</h3>
 	{/snippet}
 	{#snippet h4(props)}
 		{@const { children, ...rest } = props}
-		<h4 {...rest} class={cn('mb-2 mt-6 text-lg font-semibold', rest.class)}>
+		<h4 {...rest} class={cn('mt-6 mb-2 text-lg font-semibold', rest.class)}>
 			{@render children?.()}
 		</h4>
 	{/snippet}
 	{#snippet h5(props)}
 		{@const { children, ...rest } = props}
-		<h5 {...rest} class={cn('mb-2 mt-6 text-base font-semibold', rest.class)}>
+		<h5 {...rest} class={cn('mt-6 mb-2 text-base font-semibold', rest.class)}>
 			{@render children?.()}
 		</h5>
 	{/snippet}
 	{#snippet h6(props)}
 		{@const { children, ...rest } = props}
-		<h6 {...rest} class={cn('mb-2 mt-6 text-sm font-semibold', rest.class)}>
+		<h6 {...rest} class={cn('mt-6 mb-2 text-sm font-semibold', rest.class)}>
 			{@render children?.()}
 		</h6>
 	{/snippet}

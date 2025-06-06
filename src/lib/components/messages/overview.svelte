@@ -21,9 +21,9 @@
 				open source
 			</a>
 			chatbot template built with SvelteKit and the AI SDK by Vercel. It uses the
-			<code class="rounded-md bg-muted px-1 py-0.5">streamText</code>
+			<code class="bg-muted rounded-md px-1 py-0.5">streamText</code>
 			function in the server and the
-			<code class="rounded-md bg-muted px-1 py-0.5">useChat</code> hook on the client to create a seamless
+			<code class="bg-muted rounded-md px-1 py-0.5">useChat</code> hook on the client to create a seamless
 			chat experience.
 		</p>
 		<p>

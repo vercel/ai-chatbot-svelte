@@ -152,7 +152,7 @@
 				<PreviewAttachment {attachment} />
 			{/each}
 
-			{#each uploadQueue as filename}
+			{#each uploadQueue as filename (filename)}
 				<PreviewAttachment
 					attachment={{
 						url: '',

@@ -33,7 +33,7 @@
 				{...props}
 				variant="outline"
 				class={cn(
-					'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground md:h-[34px] md:px-2',
+					'data-[state=open]:bg-accent data-[state=open]:text-accent-foreground w-fit md:h-[34px] md:px-2',
 					c
 				)}
 			>
@@ -54,13 +54,13 @@
 			>
 				<div class="flex flex-col items-start gap-1">
 					<div>{chatModel.name}</div>
-					<div class="text-xs text-muted-foreground">
+					<div class="text-muted-foreground text-xs">
 						{chatModel.description}
 					</div>
 				</div>
 
 				<div
-					class="text-foreground opacity-0 group-data-[active=true]/item:opacity-100 dark:text-foreground"
+					class="text-foreground dark:text-foreground opacity-0 group-data-[active=true]/item:opacity-100"
 				>
 					<CheckCircleFillIcon />
 				</div>

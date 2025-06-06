@@ -139,7 +139,7 @@
 
 	<input
 		type="file"
-		class="pointer-events-none fixed -left-4 -top-4 size-0.5 opacity-0"
+		class="pointer-events-none fixed -top-4 -left-4 size-0.5 opacity-0"
 		bind:this={fileInputRef}
 		multiple
 		onchange={handleFileChange}
@@ -152,7 +152,7 @@
 				<PreviewAttachment {attachment} />
 			{/each}
 
-			{#each uploadQueue as filename}
+			{#each uploadQueue as filename (filename)}
 				<PreviewAttachment
 					attachment={{
 						url: '',
@@ -170,7 +170,7 @@
 		placeholder="Send a message..."
 		bind:value={() => chatClient.input, setInput}
 		class={cn(
-			'max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl bg-muted pb-10 !text-base dark:border-zinc-700',
+			'bg-muted max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-10 !text-base dark:border-zinc-700',
 			c
 		)}
 		rows={2}
@@ -192,7 +192,7 @@
 		{@render attachmentsButton()}
 	</div>
 
-	<div class="absolute bottom-0 right-0 flex w-fit flex-row justify-end p-2">
+	<div class="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
 		{#if loading}
 			{@render stopButton()}
 		{:else}

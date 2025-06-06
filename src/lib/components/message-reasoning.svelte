@@ -52,7 +52,7 @@
 			onintroend={unlockScrolling}
 			onoutrostart={lockScrolling}
 			onoutroend={unlockScrolling}
-			class="mb-2 mt-4 flex flex-col gap-4 border-l pl-4 text-zinc-600 dark:text-zinc-400"
+			class="mt-4 mb-2 flex flex-col gap-4 border-l pl-4 text-zinc-600 dark:text-zinc-400"
 		>
 			<Markdown md={reasoning} />
 		</div>

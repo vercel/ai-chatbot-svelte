@@ -1,4 +1,6 @@
 import { Dialog as SheetPrimitive } from 'bits-ui';
+import Trigger from './sheet-trigger.svelte';
+import Close from './sheet-close.svelte';
 import Overlay from './sheet-overlay.svelte';
 import Content from './sheet-content.svelte';
 import Header from './sheet-header.svelte';
@@ -8,8 +10,6 @@ import Description from './sheet-description.svelte';
 import type { ComponentProps } from 'svelte';
 
 const Root = SheetPrimitive.Root;
-const Close = SheetPrimitive.Close;
-const Trigger = SheetPrimitive.Trigger;
 const Portal = SheetPrimitive.Portal;
 
 type SheetProps = ComponentProps<typeof Root>;

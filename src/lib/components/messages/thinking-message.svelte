@@ -10,17 +10,17 @@
 >
 	<div
 		class="
-      flex w-full gap-4 rounded-xl group-data-[role=user]/message:ml-auto group-data-[role=user]/message:w-fit
-      group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:bg-muted group-data-[role=user]/message:px-3
+      group-data-[role=user]/message:bg-muted flex w-full gap-4 rounded-xl group-data-[role=user]/message:ml-auto
+      group-data-[role=user]/message:w-fit group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:px-3
       group-data-[role=user]/message:py-2
     "
 	>
-		<div class="flex size-8 shrink-0 items-center justify-center rounded-full ring-1 ring-border">
+		<div class="ring-border flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
 			<SparklesIcon size={14} />
 		</div>
 
 		<div class="flex w-full flex-col gap-2">
-			<div class="flex flex-col gap-4 text-muted-foreground">Hmm...</div>
+			<div class="text-muted-foreground flex flex-col gap-4">Hmm...</div>
 		</div>
 	</div>
 </div>

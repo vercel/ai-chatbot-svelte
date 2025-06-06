@@ -23,7 +23,7 @@
 				{#snippet child({ props })}
 					<SidebarMenuButton
 						{...props}
-						class="h-10 bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+						class="bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-10"
 					>
 						<img
 							src={`https://avatar.vercel.sh/${user.email}`}

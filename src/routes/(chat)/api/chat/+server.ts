@@ -7,155 +7,160 @@ import { getMostRecentUserMessage, getTrailingMessageId } from '$lib/utils/chat.
 import { allowAnonymousChats } from '$lib/utils/constants.js';
 import { error } from '@sveltejs/kit';
 import {
-	appendResponseMessages,
-	createDataStreamResponse,
-	smoothStream,
-	streamText,
-	type UIMessage
+    convertToModelMessages, 
+    streamText,
+    type UIMessage,
 } from 'ai';
-import { ok, safeTry } from 'neverthrow';
+import { z } from 'zod';
+
+// Define metadata schema
+const metadataSchema = z.object({
+    duration: z.number().optional(),
+    model: z.string().optional(),
+    totalTokens: z.number().optional(),
+});
+
+type MessageMetadata = z.infer<typeof metadataSchema>;
 
 export async function POST({ request, locals: { user }, cookies }) {
-	// TODO: zod?
-	const { id, messages }: { id: string; messages: UIMessage[] } = await request.json();
-	const selectedChatModel = cookies.get('selected-model');
+    const { id, messages }: { id: string; messages: UIMessage[] } = await request.json();
+    const selectedChatModel = cookies.get('selected-model');
 
-	if (!user && !allowAnonymousChats) {
-		error(401, 'Unauthorized');
-	}
+    if (!user && !allowAnonymousChats) {
+        error(401, 'Unauthorized');
+    }
 
-	if (!selectedChatModel) {
-		error(400, 'No chat model selected');
-	}
+    if (!selectedChatModel) {
+        error(400, 'No chat model selected');
+    }
 
-	const userMessage = getMostRecentUserMessage(messages);
+    const userMessage = getMostRecentUserMessage(messages);
 
-	if (!userMessage) {
-		error(400, 'No user message found');
-	}
+    if (!userMessage) {
+        error(400, 'No user message found');
+    }
 
-	if (user) {
-		await safeTry(async function* () {
-			let chat: Chat;
-			const chatResult = await getChatById({ id });
-			if (chatResult.isErr()) {
-				if (chatResult.error._tag !== 'DbEntityNotFoundError') {
-					return chatResult;
-				}
-				const title = yield* generateTitleFromUserMessage({ message: userMessage });
-				chat = yield* saveChat({ id, userId: user.id, title });
-			} else {
-				chat = chatResult.value;
-			}
+    if (user) {
+        try {
+            let chat: Chat;
+            const chatResult = await getChatById({ id });
+            
+            if (chatResult.isErr()) {
+                const titleResult = await generateTitleFromUserMessage({ message: userMessage });
+                if (titleResult.isErr()) {
+                    throw titleResult.error;
+                }
 
-			if (chat.userId !== user.id) {
-				error(403, 'Forbidden');
-			}
+                const saveResult = await saveChat({ id, userId: user.id, title: titleResult.value });
+                if (saveResult.isErr()) {
+                    throw saveResult.error;
+                }
+                chat = saveResult.value;
+            } else {
+                chat = chatResult.value;
+            }
 
-			yield* saveMessages({
-				messages: [
-					{
-						chatId: id,
-						id: userMessage.id,
-						role: 'user',
-						parts: userMessage.parts,
-						attachments: userMessage.experimental_attachments ?? [],
-						createdAt: new Date()
-					}
-				]
-			});
+            if (chat.userId !== user.id) {
+                error(403, 'Forbidden');
+            }
 
-			return ok(undefined);
-		}).orElse(() => error(500, 'An error occurred while processing your request'));
-	}
+            const saveMessageResult = await saveMessages({
+                messages: [{
+                    chatId: id,
+                    id: userMessage.id,
+                    role: 'user',
+                    parts: userMessage.parts,
+                    createdAt: new Date(),
+                    attachments: [] // Add empty array or appropriate value for attachments
+                }]
+            });
 
-	return createDataStreamResponse({
-		execute: (dataStream) => {
-			const result = streamText({
-				model: myProvider.languageModel(selectedChatModel),
-				system: systemPrompt({ selectedChatModel }),
-				messages,
-				maxSteps: 5,
-				experimental_activeTools: [],
-				// TODO
-				// selectedChatModel === 'chat-model-reasoning'
-				// 	? []
-				// 	: ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions'],
-				experimental_transform: smoothStream({ chunking: 'word' }),
-				experimental_generateMessageId: crypto.randomUUID.bind(crypto),
-				// TODO
-				// tools: {
-				// 	getWeather,
-				// 	createDocument: createDocument({ session, dataStream }),
-				// 	updateDocument: updateDocument({ session, dataStream }),
-				// 	requestSuggestions: requestSuggestions({
-				// 		session,
-				// 		dataStream
-				// 	})
-				// },
-				onFinish: async ({ response }) => {
-					if (!user) return;
-					const assistantId = getTrailingMessageId({
-						messages: response.messages.filter((message) => message.role === 'assistant')
-					});
+            if (saveMessageResult.isErr()) {
+                throw saveMessageResult.error;
+            }
+        } catch (err) {
+            error(500, 'An error occurred while processing your request');
+        }
+    }
 
-					if (!assistantId) {
-						throw new Error('No assistant message found!');
-					}
+    const startTime = Date.now();
+    const result = streamText({
+        model: myProvider.languageModel(selectedChatModel),
+        messages: convertToModelMessages(messages),
+        system: systemPrompt({ selectedChatModel })
+    });
 
-					const [, assistantMessage] = appendResponseMessages({
-						messages: [userMessage],
-						responseMessages: response.messages
-					});
+    return result.toUIMessageStreamResponse({
+        messageMetadata: ({ part }): MessageMetadata | undefined => {
+            if (part.type === 'start') {
+                return {
+                    model: selectedChatModel,
+                };
+            }
 
-					await saveMessages({
-						messages: [
-							{
-								id: assistantId,
-								chatId: id,
-								role: assistantMessage.role,
-								parts: assistantMessage.parts,
-								attachments: assistantMessage.experimental_attachments ?? [],
-								createdAt: new Date()
-							}
-						]
-					});
-				},
-				experimental_telemetry: {
-					isEnabled: true,
-					functionId: 'stream-text'
-				}
-			});
+            if (part.type === 'finish-step') {
+                return {
+                    model: selectedChatModel,
+                    duration: Date.now() - startTime,
+                };
+            }
 
-			result.consumeStream();
+            if (part.type === 'finish') {
+                return {
+                    totalTokens: part.totalUsage?.totalTokens
+                };
+            }
+        },
+        onFinish: async ({ responseMessage }) => {
+            if (!user) return;
 
-			result.mergeIntoDataStream(dataStream, {
-				sendReasoning: true
-			});
-		},
-		onError: (e) => {
-			console.error(e);
-			return 'Oops!';
-		}
-	});
+            try {
+                const saveResult = await saveMessages({
+                    messages: [{
+                        id: responseMessage.id,
+                        chatId: id,
+                        role: responseMessage.role,
+                        parts: responseMessage.parts,
+                        createdAt: new Date(),
+                        attachments: [] // Add empty array or appropriate value for attachments
+                    }]
+                });
+
+                if (saveResult.isErr()) {
+                    throw saveResult.error;
+                }
+            } catch (err) {
+                console.error('Failed to save assistant message:', err);
+            }
+        }
+    });
 }
 
 export async function DELETE({ locals: { user }, request }) {
-	// TODO: zod
-	const { id }: { id: string } = await request.json();
-	if (!user) {
-		error(401, 'Unauthorized');
-	}
+    if (!user) {
+        error(401, 'Unauthorized');
+    }
 
-	return await getChatById({ id })
-		.andTee((chat) => {
-			if (chat.userId !== user.id) {
-				error(403, 'Forbidden');
-			}
-		})
-		.andThen(deleteChatById)
-		.match(
-			() => new Response('Chat deleted', { status: 200 }),
-			() => error(500, 'An error occurred while processing your request')
-		);
+    const { id }: { id: string } = await request.json();
+    
+    try {
+        const chatResult = await getChatById({ id });
+        if (chatResult.isErr()) {
+            error(404, 'Chat not found');
+        }
+        
+        const chat = chatResult.value;
+        if (chat.userId !== user.id) {
+            error(403, 'Forbidden');
+        }
+        
+        const deleteResult = await deleteChatById({ id });
+        if (deleteResult.isErr()) {
+            throw deleteResult.error;
+        }
+    } catch (err) {
+        error(500, 'An error occurred while processing your request');
+    }
+
+    return new Response('Chat deleted', { status: 200 });
 }

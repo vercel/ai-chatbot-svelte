@@ -21,9 +21,9 @@
 		"db:up": "drizzle-kit up"
 	},
 	"devDependencies": {
-		"@ai-sdk/groq": "^1.2.0",
-		"@ai-sdk/svelte": "^2.1.0",
-		"@ai-sdk/xai": "^1.2.1",
+		"@ai-sdk/xai": "^2.0.0-alpha.10",
+		"@ai-sdk/groq": "^2.0.0-alpha.10",
+		"@ai-sdk/svelte": "^3.0.0-alpha.10",
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
 		"@internationalized/date": "^3.5.6",
@@ -37,7 +37,7 @@
 		"@tailwindcss/vite": "^4.0.0",
 		"@types/ms": "^2.1.0",
 		"@vercel/blob": "^0.27.3",
-		"ai": "^4.2.0",
+		"ai": "^5.0.0-alpha.10",
 		"autoprefixer": "^10.4.20",
 		"bcrypt-ts": "^5.0.3",
 		"bits-ui": "^2.4.1",

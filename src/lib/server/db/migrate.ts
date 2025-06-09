@@ -6,7 +6,7 @@ import postgres from 'postgres';
 config({
 	path: '.env.local'
 });
-
+console.log('process.env', process.env)
 const runMigrate = async () => {
 	if (!process.env.POSTGRES_URL) {
 		throw new Error('POSTGRES_URL is not defined');

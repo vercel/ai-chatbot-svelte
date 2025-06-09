@@ -1,4 +1,4 @@
-import { generateText, type Message } from 'ai';
+import { generateText, type UIMessage } from 'ai';
 import { myProvider } from './models';
 import { AIInternalError, type AIError } from '$lib/errors/ai';
 import { fromPromise, ok, safeTry, type ResultAsync } from 'neverthrow';
@@ -6,7 +6,7 @@ import { fromPromise, ok, safeTry, type ResultAsync } from 'neverthrow';
 export function generateTitleFromUserMessage({
 	message
 }: {
-	message: Message;
+	message: UIMessage;
 }): ResultAsync<string, AIError> {
 	return safeTry(async function* () {
 		const result = yield* fromPromise(
